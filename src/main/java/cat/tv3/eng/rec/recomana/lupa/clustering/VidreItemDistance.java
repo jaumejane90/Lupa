@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.clustering;
+package cat.tv3.eng.rec.recomana.lupa.clustering;
 
 
-import cat.tv3.eng.rec.recomana.vidre.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
+import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
 
 public class VidreItemDistance {
 	

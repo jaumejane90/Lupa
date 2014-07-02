@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.test;
+package cat.tv3.eng.rec.recomana.lupa.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import cat.tv3.eng.rec.recomana.vidre.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
+import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
 
 public class TestingMain {
 	private final static String politica_1 = "La direcció del PSOE es planteja convocar una consulta perquè els seus militants escullin el pròxim secretari general del partit uns dies abans del congrés extraordinari de juliol. L'executiva del partit estudia aquesta possibilitat si així ho demana la majoria del partit, segons asseguren fonts socialistes. Aquesta fórmula comportaria que els militants escollissin amb el seu vot directe el substitut de Rubalcaba. El congrés, posteriorment, el ratificaria i aprovaria la nova executiva. D'aquesta manera, es convocaria primer un Comitè Federal per modificar els estatuts del PSOE per donar legalitat a aquesta consulta. Alguns diputats van engegar dimarts aquesta petició, que satisfaria almenys dos dels qui aspiren a les primàries, els diputats Eduardo Madina i Pedro Sánchez. Madina va dir que veia amb bons ulls el que alguns han anomenat congrés a la gallega, ja que els socialistes gallecs van ser els primers que van assajar amb èxit aquesta fórmula l'estiu passat. Aquesta fórmula és el màxim exemple que els militants protagonitzen el canvi, va destacar Sánchez als passadissos del Congrés.";

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.test;
+package cat.tv3.eng.rec.recomana.lupa.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,10 +34,10 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Tuple;
 import cat.calidos.storm.freeling.socket.FreelingBolt;
-import cat.tv3.eng.rec.recomana.vidre.engine.CalcProbBolt;
-import cat.tv3.eng.rec.recomana.vidre.engine.CompareTextBolt;
-import cat.tv3.eng.rec.recomana.vidre.engine.DispatcherBolt;
-import cat.tv3.eng.rec.recomana.vidre.io.TextRedisSpout;
+import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
+import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
+import cat.tv3.eng.rec.recomana.lupa.engine.DispatcherBolt;
+import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
 
 

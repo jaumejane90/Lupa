@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.clustering;
+package cat.tv3.eng.rec.recomana.lupa.clustering;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import cat.tv3.eng.rec.recomana.vidre.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
+import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;

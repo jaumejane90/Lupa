@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.clustering;
+package cat.tv3.eng.rec.recomana.lupa.clustering;
 
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre;
+package cat.tv3.eng.rec.recomana.lupa;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
@@ -24,16 +24,26 @@ import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 import cat.calidos.storm.freeling.socket.FreelingBolt;
-import cat.tv3.eng.rec.recomana.vidre.clustering.DispatcherClusterBolt;
-import cat.tv3.eng.rec.recomana.vidre.clustering.SearchClusterNodeBolt;
-import cat.tv3.eng.rec.recomana.vidre.engine.CalcProbBolt;
-import cat.tv3.eng.rec.recomana.vidre.engine.CompareTextBolt;
-import cat.tv3.eng.rec.recomana.vidre.io.TextRedisSpout;
+import cat.tv3.eng.rec.recomana.lupa.clustering.DispatcherClusterBolt;
+import cat.tv3.eng.rec.recomana.lupa.clustering.SearchClusterNodeBolt;
+import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
+import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
+import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
 public class StormVidreClusteredTopology {
 	
 	public static void main(String[] args) {
-		
+		 /*
+		     Eclipse :
+		    	program arguments:
+		  			    172.21.110.182
+						6379
+						172.21.110.182
+						5050
+						3
+				VM arguments
+						-Dfile.encoding=UTF-8 
+	    */
 		 if (args.length < 5 ) {
 	            throw new RuntimeException("Invalid number of arguments(redis_host,redis_port,freeling_host,freeling_port,maximum_size_of_cluster,[deploy_remote_name])");   	
 	     }

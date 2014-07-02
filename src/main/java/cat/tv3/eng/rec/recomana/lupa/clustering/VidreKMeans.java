@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.clustering;
+package cat.tv3.eng.rec.recomana.lupa.clustering;
 
 import java.util.Random;
 

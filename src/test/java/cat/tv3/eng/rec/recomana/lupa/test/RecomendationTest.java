@@ -14,16 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.test;
+package cat.tv3.eng.rec.recomana.lupa.test;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.Test;
-import cat.tv3.eng.rec.recomana.vidre.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
+
+import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
+import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
 
 public class RecomendationTest {
 	

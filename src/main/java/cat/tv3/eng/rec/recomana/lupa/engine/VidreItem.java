@@ -16,7 +16,7 @@ limitations under the License.
 */
 
 
-package cat.tv3.eng.rec.recomana.vidre.engine;
+package cat.tv3.eng.rec.recomana.lupa.engine;
 
 import java.io.Serializable;
 import java.util.Iterator;

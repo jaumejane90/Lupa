@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre;
+package cat.tv3.eng.rec.recomana.lupa;
 
-import cat.tv3.eng.rec.recomana.vidre.io.TextRedisSpout;
-import cat.tv3.eng.rec.recomana.vidre.engine.*;
+import cat.tv3.eng.rec.recomana.lupa.engine.*;
+import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
@@ -30,7 +30,16 @@ import cat.calidos.storm.freeling.socket.FreelingBolt;
 public class StormVidreTopology {
 	
 	public static void main(String[] args) {
-		
+		 /*
+		    Eclipse :
+		    	program arguments:
+		  			    172.21.110.182
+						6379
+						172.21.110.182
+						5050						
+				VM arguments
+						-Dfile.encoding=UTF-8 
+		  */
 		 if (args.length < 4 ) {
 	            throw new RuntimeException("Invalid number of arguments(redis_host,redis_port,freeling_host,freeling_port,[deploy_remote_name])");   	
 	     }

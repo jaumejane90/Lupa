@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.test;
+package cat.tv3.eng.rec.recomana.lupa.test;
 
 public class TestTextInstance {	
 	

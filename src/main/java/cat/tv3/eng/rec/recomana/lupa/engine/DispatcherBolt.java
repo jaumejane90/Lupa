@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cat.tv3.eng.rec.recomana.vidre.clustering;
+package cat.tv3.eng.rec.recomana.lupa.engine;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,15 +29,16 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import cat.tv3.eng.rec.recomana.vidre.engine.VidreItem;
 
-public class DispatcherClusterBolt  extends BaseRichBolt {
+
+public class DispatcherBolt  extends BaseRichBolt {
+	
 	private OutputCollector _collector;
 	final String host;
 	final int port;
 	JedisPool pool;
 	
-	public DispatcherClusterBolt(String host, int port) {
+	public DispatcherBolt(String host, int port) {
 		this.host = host;
 		this.port = port;		
 	}	
@@ -54,27 +55,25 @@ public class DispatcherClusterBolt  extends BaseRichBolt {
 	}
 
 	@Override
-	public void execute(Tuple input) {	
+	public void execute(Tuple input) {		
 		String id_text = input.getStringByField("id_text");
 		VidreItem distr_text = (VidreItem)input.getValueByField("distr_text");
-		String cluster_name = input.getStringByField("cluster_name");
 		
 		Jedis jedis = pool.getResource();
 		try {					
-			Set<String> set_IDs_toCompare = jedis.smembers(cluster_name); 
+			Set<String> set_IDs_toCompare = jedis.smembers("IDs_text_toCompare"); 
 			String[] ids_toCompare = set_IDs_toCompare.toArray(new String[0]);			
 			for(int i = 0 ; i < ids_toCompare.length; ++i){			
 				_collector.emit(new Values(id_text,distr_text,ids_toCompare[i]));
-			}				
+			}
+			jedis.sadd("IDs_text_toCompare", id_text);				
 		} finally {
 			pool.returnResource(jedis);
-		}   
-		
+		}  	
 	}
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		  declarer.declare(new Fields("id_text","distr_text","id_compare")); 
-		
+		  declarer.declare(new Fields("id_text","distr_text","id_compare"));		
 	}
 }
