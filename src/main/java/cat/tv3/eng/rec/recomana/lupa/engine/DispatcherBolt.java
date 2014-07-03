@@ -57,7 +57,7 @@ public class DispatcherBolt  extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {		
 		String id_text = input.getStringByField("id_text");
-		VidreItem distr_text = (VidreItem)input.getValueByField("distr_text");
+		LupaItem distr_text = (LupaItem)input.getValueByField("distr_text");
 		
 		Jedis jedis = pool.getResource();
 		try {					

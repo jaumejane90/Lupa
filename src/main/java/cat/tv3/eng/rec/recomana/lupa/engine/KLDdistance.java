@@ -23,8 +23,8 @@ import java.util.Set;
 
 
 public class KLDdistance {
-	private VidreItem VidreItem;
-	private VidreItem VidreItem_toCompare;
+	private LupaItem VidreItem;
+	private LupaItem VidreItem_toCompare;
 	private double thresholdFactor = 10.0;	
 	
 	private Double epsilon = null;
@@ -34,7 +34,7 @@ public class KLDdistance {
 		
 	}
 	
-	public KLDdistance(VidreItem vocabulary1, VidreItem vocabulary2){
+	public KLDdistance(LupaItem vocabulary1, LupaItem vocabulary2){
 		this.VidreItem= vocabulary1;
 		this.VidreItem_toCompare= vocabulary2;
 	}
@@ -73,7 +73,7 @@ public class KLDdistance {
 		
 	}	
 	
-	protected Double wordProbabilityInDocument(String word, VidreItem documentVocabulary, double beta) {
+	protected Double wordProbabilityInDocument(String word, LupaItem documentVocabulary, double beta) {
 		Double probability = documentVocabulary.frequency(word);		
 		if (probability == 0 || probability.equals(Double.NaN)) {
 			probability = this.getEpsilon();			
@@ -84,7 +84,7 @@ public class KLDdistance {
 		return probability;
 	}
 	
-	protected double caculateBeta(VidreItem documentVocabulary) {
+	protected double caculateBeta(LupaItem documentVocabulary) {
 		Double beta = 1.0;
 		Double epsilon = this.getEpsilon();
 

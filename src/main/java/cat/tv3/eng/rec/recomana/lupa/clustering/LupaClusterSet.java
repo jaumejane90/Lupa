@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class VidreClusterSet {
-	   private List<VidreClusterItem> dataset = new ArrayList<VidreClusterItem>();
+public class LupaClusterSet {
+	   private List<LupaClusterItem> dataset = new ArrayList<LupaClusterItem>();
 	 
-	   public VidreClusterSet() {	
+	   public LupaClusterSet() {	
 		   
 	   }
 	   
-	   public VidreClusterSet(Collection<VidreClusterItem> coll) {
+	   public LupaClusterSet(Collection<LupaClusterItem> coll) {
 	       dataset.addAll(coll);
 	   }    
 	    
@@ -35,12 +35,12 @@ public class VidreClusterSet {
 	    	return dataset.size();	    	
 	   }
 	    
-	   public VidreClusterItem getInstance(int index) {
+	   public LupaClusterItem getInstance(int index) {
 	       return dataset.get(index);
 	   }
 	    
-	   public Integer findProximity(VidreClusterItem centroid){
-	    	VidreItemDistance dm = new VidreItemDistance();
+	   public Integer findProximity(LupaClusterItem centroid){
+	    	LupaItemDistance dm = new LupaItemDistance();
 	    	int tmpCentroid = 0;
 	    	double minDistance = dm.distance(centroid, this.getInstance(0));
 	    	for(int i = 1 ; i < dataset.size() ; ++i) {
@@ -54,7 +54,7 @@ public class VidreClusterSet {
 	    	return tmpCentroid;     	
 	    }
 	    
-	    public void addInstance(VidreClusterItem instance){
+	    public void addInstance(LupaClusterItem instance){
 	    	dataset.add(instance);
 	    }	    
 	  

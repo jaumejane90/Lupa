@@ -71,7 +71,7 @@ public class CompareTextBolt extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {
 		String id_text = input.getStringByField("id_text");
-		VidreItem distr_text = (VidreItem)input.getValueByField("distr_text");
+		LupaItem distr_text = (LupaItem)input.getValueByField("distr_text");
 		String id_compare = input.getStringByField("id_compare");
 		if(!id_text.equals(id_compare)) {			
 			TreeMap<String, Double> distr_prob = new TreeMap<String,Double>();
@@ -92,7 +92,7 @@ public class CompareTextBolt extends BaseRichBolt {
 				pool.returnResource(jedis);
 			}       		
 			
-			VidreItem to_compare = new VidreItem();
+			LupaItem to_compare = new LupaItem();
 			to_compare.setWordCounts(distr_prob);
 			to_compare.setSize(total);		
 			

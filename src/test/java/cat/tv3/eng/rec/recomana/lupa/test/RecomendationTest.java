@@ -25,7 +25,7 @@ import java.util.List;
 import org.junit.Test;
 
 import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 
 public class RecomendationTest {
 	
@@ -37,11 +37,11 @@ public class RecomendationTest {
 		
 		List<String> words_test_1 = new ArrayList<String>();		
 		words_test_1 = Arrays.asList(text_1.split(" "));		
-		VidreItem vocabulary_test_1 = new VidreItem(words_test_1);
+		LupaItem vocabulary_test_1 = new LupaItem(words_test_1);
 		
 		List<String> words_test_2 = new ArrayList<String>();		
 		words_test_2 = Arrays.asList(text_2.split(" "));
-		VidreItem vocabulary_test_2 = new VidreItem(words_test_2);
+		LupaItem vocabulary_test_2 = new LupaItem(words_test_2);
 				
 		KLDdistance classificador = new KLDdistance(vocabulary_test_1,vocabulary_test_2);
 		test(2.243,classificador.distance());		

@@ -27,13 +27,13 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 import cat.calidos.storm.freeling.socket.FreelingBolt;
 
-public class StormVidreTopology {
+public class StormLupaTopology {
 	
 	public static void main(String[] args) {
 		/*
-		    Eclipse :
-		    	program arguments:
-		  			    @IP redis host
+			Eclipse :
+				program arguments:
+					    @IP redis host
 						redis port
 						@IP redis freeling
 						freeling port					
@@ -60,9 +60,9 @@ public class StormVidreTopology {
 		   
 		if(args!=null && args.length > 4) { 
 			Config conf = new Config();
-            conf.setDebug(true);
-            conf.setNumWorkers(3); 
-            try {
+			conf.setDebug(true);
+			conf.setNumWorkers(3); 
+			try {
 				StormSubmitter.submitTopology(args[4], conf, b.createTopology());
 			} catch (AlreadyAliveException e) {				
 				e.printStackTrace();
@@ -72,7 +72,7 @@ public class StormVidreTopology {
            
 	    }
 		else {  //Local
-	        LocalCluster cluster = new LocalCluster();
+			LocalCluster cluster = new LocalCluster();
 			try {	
 				cluster.submitTopology("test", new Config(), b.createTopology());
 				Utils.sleep(1000000);	

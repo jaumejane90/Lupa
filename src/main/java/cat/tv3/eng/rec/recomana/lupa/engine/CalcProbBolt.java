@@ -61,7 +61,7 @@ public class CalcProbBolt extends BaseRichBolt {
 		String id_text = freeling_text.getOriginalTokens().get(freeling_text.getOriginalTokens().size()-1);		
 		List<String> list_words = freeling_text.getListStringMorfologicText();
 	    list_words.remove(list_words.size()-1);
-		VidreItem distr_prob_text = new VidreItem(list_words);		
+		LupaItem distr_prob_text = new LupaItem(list_words);		
 				
 		Jedis jedis = pool.getResource();
 		try {	

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -60,7 +60,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {		
 		String id_text = input.getStringByField("id_text");
-		VidreItem distr_text = (VidreItem)input.getValueByField("distr_text");		
+		LupaItem distr_text = (LupaItem)input.getValueByField("distr_text");		
 					
 		Jedis jedis = pool.getResource();			
 		
@@ -96,12 +96,12 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 					   _collector.emit(new Values(id_text,distr_text,cluster_name));
 				   }
 				   else { 
-					   VidreClusterSet dataset = clusterList_toDataset(cluster_name);
-					   VidreKMeans kmeans = new VidreKMeans(2,100,new VidreItemDistance());						
-					   VidreClusterSet[] clusters = kmeans.cluster(dataset);
+					   LupaClusterSet dataset = clusterList_toDataset(cluster_name);
+					   LupaKMeans kmeans = new LupaKMeans(2,100,new LupaItemDistance());						
+					   LupaClusterSet[] clusters = kmeans.cluster(dataset);
 					   
 				       Map<String,String> new_attr_cluster = new TreeMap<String,String>();	
-					   VidreClusterItem[] centroids = kmeans.getCentroids();
+					   LupaClusterItem[] centroids = kmeans.getCentroids();
 					   jedis.del(attr_cluster.get("cluster_ids_name"));					  
 					
 					   new_attr_cluster.put("cluster_ids_name", "cluster_splited" );
@@ -138,17 +138,17 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 		
 	}
 	
-	public VidreClusterSet clusterList_toDataset(String cluster_name){		
+	public LupaClusterSet clusterList_toDataset(String cluster_name){		
 		
-		VidreClusterSet dataset = new VidreClusterSet();
+		LupaClusterSet dataset = new LupaClusterSet();
 		String[] ids_noticia_cluster = new String[0];
 		
 		Jedis jedis = pool.getResource();		
 		try{			
 			 ids_noticia_cluster = jedis.smembers(cluster_name).toArray(new String[0]);
-			 VidreClusterItem[] instances = new VidreClusterItem[ids_noticia_cluster.length];		
+			 LupaClusterItem[] instances = new LupaClusterItem[ids_noticia_cluster.length];		
 			 for(int i = 0; i<ids_noticia_cluster.length; ++i){
-				 instances[i] = new VidreClusterItem(ids_noticia_cluster[i]);
+				 instances[i] = new LupaClusterItem(ids_noticia_cluster[i]);
 				 Map<String,String> distr_prob_map = jedis.hgetAll("distr_text-id-"+ids_noticia_cluster[i]);				
 				 instances[i].addTreeMapStrings(distr_prob_map);
 				 dataset.addInstance(instances[i]);
@@ -159,7 +159,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 		return dataset;
 	}
 	
-	public void search_cluster_binarytree(String id_text, VidreItem distr_text,String hash_name,Integer h){
+	public void search_cluster_binarytree(String id_text, LupaItem distr_text,String hash_name,Integer h){
 		Jedis jedis = pool.getResource();			
 		
 		try {
@@ -190,12 +190,12 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 					   _collector.emit(new Values(id_text,distr_text,cluster_name));
 				   }
 				   else { 
-					   VidreClusterSet dataset = clusterList_toDataset(cluster_name);
-					   VidreKMeans kmeans = new VidreKMeans(2,100,new VidreItemDistance());						
-					   VidreClusterSet[] clusters = kmeans.cluster(dataset);
+					   LupaClusterSet dataset = clusterList_toDataset(cluster_name);
+					   LupaKMeans kmeans = new LupaKMeans(2,100,new LupaItemDistance());						
+					   LupaClusterSet[] clusters = kmeans.cluster(dataset);
 					   
 					   Map<String,String> new_attr_cluster = new TreeMap<String,String>();	
-					   VidreClusterItem[] centroids = kmeans.getCentroids();
+					   LupaClusterItem[] centroids = kmeans.getCentroids();
 					   jedis.del(attr_cluster.get("cluster_ids_name"));
 					
 					   new_attr_cluster.put("cluster_ids_name", "cluster_splited" );
@@ -233,7 +233,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 		
 	}
 	
-	public Double compareKLD(VidreItem vidreitem, String id_text){		
+	public Double compareKLD(LupaItem vidreitem, String id_text){		
 		TreeMap<String, Double> distr_prob = new TreeMap<String,Double>();
 		String Key;
 		Double Value;
@@ -252,7 +252,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 			pool.returnResource(jedis);
 		}       		
 		
-		VidreItem to_compare = new VidreItem();
+		LupaItem to_compare = new LupaItem();
 		to_compare.setWordCounts(distr_prob);
 		to_compare.setSize(total);		
 		

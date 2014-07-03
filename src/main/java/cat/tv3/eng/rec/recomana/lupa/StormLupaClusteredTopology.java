@@ -30,20 +30,20 @@ import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
 import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
-public class StormVidreClusteredTopology {
+public class StormLupaClusteredTopology {
 	
 	public static void main(String[] args) {
-		 /*
-		     Eclipse :
-		    	program arguments:
-		  			    @IP redis host
+		/*
+				Eclipse :
+					program arguments:
+						@IP redis host
 						redis port
 						@IP redis freeling
 						freeling port	
 						maximum size of cluster
-				VM arguments
-						-Dfile.encoding=UTF-8 
-	    */
+					VM arguments
+							-Dfile.encoding=UTF-8 
+		*/
 		 if (args.length < 5 ) {
 	            throw new RuntimeException("Invalid number of arguments(redis_host,redis_port,freeling_host,freeling_port,maximum_size_of_cluster,[deploy_remote_name])");   	
 	     }
@@ -60,33 +60,31 @@ public class StormVidreClusteredTopology {
 	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("TextRedisSpout"); 
 	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port)).shuffleGrouping("FreelingBolt");
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
-		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
+	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	    
-		if(args!=null && args.length > 5) {   //Storm Remot
-			Config conf = new Config();
-	        conf.setDebug(true);
-	        conf.setNumWorkers(3); 
-	        try {
+	     if(args!=null && args.length > 5) {   //Storm Remot
+	    	Config conf = new Config();
+			conf.setDebug(true);
+			conf.setNumWorkers(3); 
+			try {
 				StormSubmitter.submitTopology(args[5], conf, b.createTopology());
 			} catch (AlreadyAliveException e) {				
 				e.printStackTrace();
 			} catch (InvalidTopologyException e) {				
 				e.printStackTrace();
-			}       
-	        
-		}
-		else {   //Storm Local
-			LocalCluster cluster = new LocalCluster();
-			try {	
-				cluster.submitTopology("test", new Config(), b.createTopology());
-				Utils.sleep(1000000);	
-			} finally {
-				try {
-				cluster.shutdown();
-				} catch (Exception e) {}			
-			}
-		}
-	}
-		
+			} 
+	     }
+	     else {   //Storm Local
+	    	 LocalCluster cluster = new LocalCluster();
+	    	 try {	
+	    		 cluster.submitTopology("test", new Config(), b.createTopology());
+	    		 Utils.sleep(1000000);	
+	    	 } finally {
+	    		 try {
+	    			 cluster.shutdown();
+	    		 } catch (Exception e) {}			
+	    	 }
+	     }
+	}		
 }

@@ -19,16 +19,16 @@ package cat.tv3.eng.rec.recomana.lupa.clustering;
 import java.util.Random;
 
 
-public class VidreKMeans  {
+public class LupaKMeans  {
     
     private int clusters = -1;   
     private int maximumOfIterations = -1;   
     private Random rg;  
-    private VidreItemDistance distance_function;   
-    private VidreClusterItem[] centroids;
+    private LupaItemDistance distance_function;   
+    private LupaClusterItem[] centroids;
 
       
-    public VidreKMeans(int clusters, int iterations, VidreItemDistance d) {
+    public LupaKMeans(int clusters, int iterations, LupaItemDistance d) {
         this.clusters = clusters;
         this.maximumOfIterations = iterations;
         this.distance_function = d;
@@ -36,16 +36,16 @@ public class VidreKMeans  {
     }  
     
 
-    public VidreClusterItem[] getCentroids() {
+    public LupaClusterItem[] getCentroids() {
 		return centroids;
 	}
 
-	public void setCentroids(VidreClusterItem[] centroids) {
+	public void setCentroids(LupaClusterItem[] centroids) {
 		this.centroids = centroids;
 	}
 
 	
-    public VidreClusterSet[] cluster(VidreClusterSet dataset) {
+    public LupaClusterSet[] cluster(LupaClusterSet dataset) {
         if (dataset.size() == 0) {
             throw new RuntimeException("VidreDataset empty");   	
         }
@@ -64,7 +64,7 @@ public class VidreKMeans  {
             int[] assigs = assignInstasncestoCentroids(dataset,centroids);
             
             int[] sizeCluster = new int[this.clusters];              
-            VidreClusterItem[] newMathematicsCentroids = findMatethmaticCentroids(dataset, sizeCluster, assigs);
+            LupaClusterItem[] newMathematicsCentroids = findMatethmaticCentroids(dataset, sizeCluster, assigs);
     
             stillGeneratingNewClusters = false;
             thereAreRandomClustersLeft = false;
@@ -85,7 +85,7 @@ public class VidreKMeans  {
         return clustertoDataset(dataset, centroids);
     }
     
-    private int[] assignInstasncestoCentroids(VidreClusterSet dataset, VidreClusterItem[] centroids ){    	
+    private int[] assignInstasncestoCentroids(LupaClusterSet dataset, LupaClusterItem[] centroids ){    	
     	 int[] assigs = new int[dataset.size()];         
          for (int i = 0; i < dataset.size(); i++) {
              int bestClusterIndex = 0;
@@ -102,9 +102,9 @@ public class VidreKMeans  {
           return assigs;
     }
     
-    private VidreClusterItem[] randomCentroids(VidreClusterSet dataset){
+    private LupaClusterItem[] randomCentroids(LupaClusterSet dataset){
     	  Integer rand_centroid_gen;
-          VidreClusterItem[] centroids = new VidreClusterItem[clusters];       
+          LupaClusterItem[] centroids = new LupaClusterItem[clusters];       
           for (int i = 0; i < clusters; i++) {
           	rand_centroid_gen = rg.nextInt(dataset.size());           	
           	centroids[i] = dataset.getInstance(rand_centroid_gen);        	
@@ -112,13 +112,13 @@ public class VidreKMeans  {
     	return centroids;
     }
     
-    private VidreClusterItem[] findMatethmaticCentroids(VidreClusterSet dataset, int[] sizeCluster, int[] assigs){
-    	 VidreClusterItem[] newMathematicsCentroids = new VidreClusterItem[this.clusters];
+    private LupaClusterItem[] findMatethmaticCentroids(LupaClusterSet dataset, int[] sizeCluster, int[] assigs){
+    	 LupaClusterItem[] newMathematicsCentroids = new LupaClusterItem[this.clusters];
          for(int i =0 ; i < this.clusters; i++) {
-        	 newMathematicsCentroids[i] = new VidreClusterItem();
+        	 newMathematicsCentroids[i] = new LupaClusterItem();
          }
          for (int i = 0; i < dataset.size(); i++) {
-             VidreClusterItem in = dataset.getInstance(i);
+             LupaClusterItem in = dataset.getInstance(i);
              newMathematicsCentroids[assigs[i]].addTreeMap(in.getText_freq());               
              sizeCluster[assigs[i]]++;
          }
@@ -128,10 +128,10 @@ public class VidreKMeans  {
          return newMathematicsCentroids;
     }
     
-    private VidreClusterSet[] clustertoDataset(VidreClusterSet dataset, VidreClusterItem[] final_centroids){
+    private LupaClusterSet[] clustertoDataset(LupaClusterSet dataset, LupaClusterItem[] final_centroids){
     	
-    	 VidreClusterSet[] result = new VidreClusterSet[clusters];
-         for (int i = 0; i < clusters; i++)  result[i] = new VidreClusterSet();
+    	 LupaClusterSet[] result = new LupaClusterSet[clusters];
+         for (int i = 0; i < clusters; i++)  result[i] = new LupaClusterSet();
          for (int i = 0; i < dataset.size(); i++) {
              int bestCluster = 0;
              double minDistance = distance_function.distance(final_centroids[0], dataset.getInstance(i));

@@ -26,24 +26,24 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 
-public class VidreClusterItem implements Map<String,Double>, Serializable {
+public class LupaClusterItem implements Map<String,Double>, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private TreeMap<String, Double> text_freq = new TreeMap<String, Double>();	
 	private String ID;
 	private Double count;
 	
-	public VidreClusterItem() {	      
+	public LupaClusterItem() {	      
 	      this.count = 0.0;
 	}
 	
-	public VidreClusterItem(String id) {
+	public LupaClusterItem(String id) {
 		this.ID = id;
 		this.count = 0.0;
 	      
 	}
 
-	public VidreClusterItem(TreeMap<String,Double> text_freq, String id, Double count) {
+	public LupaClusterItem(TreeMap<String,Double> text_freq, String id, Double count) {
        this.text_freq = text_freq;
        this.ID = id;
        this.count = count;

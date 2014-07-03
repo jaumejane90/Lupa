@@ -26,15 +26,15 @@ import java.util.TreeMap;
 
 
 
-public class VidreItem implements Iterable<String>, Serializable {
+public class LupaItem implements Iterable<String>, Serializable {
 	
 	private TreeMap<String, Double> wordCounts = new TreeMap<String, Double>();	
 	private Double size = 0.0;
 
-	public VidreItem() {
+	public LupaItem() {
 	}
 
-	public VidreItem(List<String> words) {
+	public LupaItem(List<String> words) {
 		this.addAll(words);
 	}
 

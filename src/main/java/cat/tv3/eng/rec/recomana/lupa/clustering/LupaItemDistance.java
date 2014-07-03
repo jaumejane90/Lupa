@@ -18,19 +18,19 @@ package cat.tv3.eng.rec.recomana.lupa.clustering;
 
 
 import cat.tv3.eng.rec.recomana.lupa.engine.KLDdistance;
-import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 
-public class VidreItemDistance {
+public class LupaItemDistance {
 	
-	public VidreItemDistance() {	      
+	public LupaItemDistance() {	      
 	}
 	
-	public double distance(VidreClusterItem x, VidreClusterItem y){			
-		VidreItem Instance_x = new VidreItem();
+	public double distance(LupaClusterItem x, LupaClusterItem y){			
+		LupaItem Instance_x = new LupaItem();
 		Instance_x.setWordCounts(x.getText_freq());
 		Instance_x.setSize(x.getCount());	
 		
-		VidreItem Instance_y = new VidreItem();
+		LupaItem Instance_y = new LupaItem();
 		Instance_y.setWordCounts(y.getText_freq());
 		Instance_y.setSize(y.getCount());	
 		

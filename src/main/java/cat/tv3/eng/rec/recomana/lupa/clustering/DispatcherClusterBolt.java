@@ -29,7 +29,7 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import cat.tv3.eng.rec.recomana.lupa.engine.VidreItem;
+import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 
 public class DispatcherClusterBolt  extends BaseRichBolt {
 	private OutputCollector _collector;
@@ -56,7 +56,7 @@ public class DispatcherClusterBolt  extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {	
 		String id_text = input.getStringByField("id_text");
-		VidreItem distr_text = (VidreItem)input.getValueByField("distr_text");
+		LupaItem distr_text = (LupaItem)input.getValueByField("distr_text");
 		String cluster_name = input.getStringByField("cluster_name");
 		
 		Jedis jedis = pool.getResource();

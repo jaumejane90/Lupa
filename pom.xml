@@ -6,7 +6,7 @@
 	<name>${project.artifactId}</name>
 	<description></description>
 
-	<url>xxxx</url>
+	<url>https://github.com/jaumejane90/Lupa</url>
 
 	<properties>
 		<!-- Compiler properties -->
