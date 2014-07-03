@@ -36,11 +36,11 @@ public class StormVidreClusteredTopology {
 		 /*
 		     Eclipse :
 		    	program arguments:
-		  			    172.21.110.182
-						6379
-						172.21.110.182
-						5050
-						3
+		  			    @IP redis host
+						redis port
+						@IP redis freeling
+						freeling port	
+						maximum size of cluster
 				VM arguments
 						-Dfile.encoding=UTF-8 
 	    */
@@ -52,29 +52,15 @@ public class StormVidreClusteredTopology {
 	     int redis_port = Integer.parseInt(args[1]);
 	     String freeling_host = args[2];
 	     int freeling_port = Integer.parseInt(args[3]);
-	     int max_size_of_clusters = Integer.parseInt(args[4]);
-	    
-	     
-	   
+	     int max_size_of_clusters = Integer.parseInt(args[4]); 
 	
 	     TopologyBuilder b = new TopologyBuilder();
-	     // Read from Redis text and send to topology    
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
-	     // Envia ID , FreelingObject
-	      b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); //Envia text Freeling(ID LAST TOKEN)
-	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("NoticiesRedisSpout"); 
-	     
-	    // Calcular funcio de probabilitats i enviar -> ID,V(prob(string,integer)). Tamb� guardem en un hash a redis les probabilitats('distr_paraules-id-ID(Key,Value)')
+	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
+	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("TextRedisSpout"); 
 	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port)).shuffleGrouping("FreelingBolt");
-	     
-	  	 //CHECK BINARY TREE -> SEARCH CLUSTER TO COMPARE AND ADD INTO CLUSTER (if cluster >> TAM) SPLIT WITH K MEANS
-	    //Search Cluster // In <- ID voabulary) Out -> ID vocabulary NameClusterListIDS
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
-		    
-	   	     
-	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); // Envia id,Freeling(noticia) + {ids} una per cada tupla to compare
-	     
-	     //Per cada id + prob + id(carregues prob) -> Calcules DISTANCIA i guardes a HASH ID -> 5 RECOMANACIONS SI es < sobrescius sino no es guarda
+		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	    
 		if(args!=null && args.length > 5) {   //Storm Remot
