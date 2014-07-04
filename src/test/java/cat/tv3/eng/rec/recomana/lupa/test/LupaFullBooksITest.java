@@ -74,22 +74,21 @@ public static JedisPool pool;
 			
 			List<TestTextInstance> dataset  = Datasets.getFullBooksSamples();
 			//Book 1 -> 56 parts , Book 2 -> 49 parts , Book 3 -> 33 parts
-			for(int i=0 ; i<10; ++i) {
-				System.out.println(dataset.get(i).getId());
+			for(int i=0 ; i<10; ++i) {				
 				insertTextToRedis(dataset.get(i));
 			}
 			for(int i=0 ; i<10; ++i) {
-				System.out.println(dataset.get(56+i).getId());
+				//System.out.println(dataset.get(56+i).getId());
 				insertTextToRedis(dataset.get(56+i));
 			}
 			for(int i=0 ; i<10; ++i) {
-				System.out.println(dataset.get(56+49+i).getId());
+				//System.out.println(dataset.get(56+49+i).getId());
 				insertTextToRedis(dataset.get(56+49+i));
 			}
 			
 			for (int i = 10 ; i < dataset.size(); ++i) {	
 				if((i>=10 && i < 56) || (i >= 66 && i < 56+49) || (i >= 56+49)) {
-					System.out.println(dataset.get(i).getId());
+					//System.out.println(dataset.get(i).getId());
 					insertTextToRedis(dataset.get(i));
 				}
 			} 		

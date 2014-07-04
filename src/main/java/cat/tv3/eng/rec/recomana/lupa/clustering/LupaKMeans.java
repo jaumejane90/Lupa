@@ -45,15 +45,15 @@ public class LupaKMeans  {
 	}
 
 	
-    public LupaClusterSet[] cluster(LupaClusterSet dataset) {
-        if (dataset.size() == 0) {
-            throw new RuntimeException("VidreDataset empty");   	
+    public LupaClusterSet[] cluster(LupaClusterSet clusterset) {
+        if (clusterset.size() == 0) {
+            throw new RuntimeException("LupaClusterset empty");   	
         }
         if (clusters <= 1) {
         	clusters = 2;    
         }      
        
-        this.centroids = randomCentroids(dataset);
+        this.centroids = randomCentroids(clusterset);
                 
         int itCount = 0;
         boolean stillGeneratingNewClusters = true;
@@ -61,28 +61,27 @@ public class LupaKMeans  {
         while (thereAreRandomClustersLeft || (itCount < this.maximumOfIterations && stillGeneratingNewClusters)) {
         	itCount++;          
            
-            int[] assigs = assignInstasncestoCentroids(dataset,centroids);
-            
+            int[] assigs = assignInstasncestoCentroids(clusterset,centroids);            
             int[] sizeCluster = new int[this.clusters];              
-            LupaClusterItem[] newMathematicsCentroids = findMatethmaticCentroids(dataset, sizeCluster, assigs);
+            LupaClusterItem[] newMathematicsCentroids = findMatethmaticCentroids(clusterset, sizeCluster, assigs);
     
             stillGeneratingNewClusters = false;
             thereAreRandomClustersLeft = false;
             for (int i = 0; i < this.clusters; i++) {
                 if (sizeCluster[i] > 0) {                  
-                    Integer index = dataset.findProximity(newMathematicsCentroids[i]);                	
-                    if (distance_function.distance(dataset.getInstance(index), centroids[i]) > 0.0001) {
+                    Integer index = clusterset.findProximity(newMathematicsCentroids[i]);                	
+                    if (distance_function.distance(clusterset.getInstance(index), centroids[i]) > 0.0001) {
                         stillGeneratingNewClusters = true;
-                        centroids[i] = dataset.getInstance(index);
+                        centroids[i] = clusterset.getInstance(index);
                     }                  	
                 } else {                    
                     thereAreRandomClustersLeft = true;
-                    this.centroids[i] = dataset.getInstance(rg.nextInt(dataset.size())); 
+                    this.centroids[i] = clusterset.getInstance(rg.nextInt(clusterset.size())); 
                 }
              }
         }
       
-        return clustertoDataset(dataset, centroids);
+        return clustertoDataset(clusterset, centroids);
     }
     
     private int[] assignInstasncestoCentroids(LupaClusterSet dataset, LupaClusterItem[] centroids ){    	

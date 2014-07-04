@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 
 import redis.clients.jedis.Jedis;
 
-public class clustertoJson {
+public class ClustersToJson {
 	public static void main(String[] args) throws IOException {	
 		
 		String host = args[0];
@@ -197,7 +197,7 @@ public class clustertoJson {
 	
 	public static JSONArray keystoArray(String[] instance_group_keys,Jedis jedis){
 		JSONArray result = new JSONArray(); 
-		JSONObject info = new JSONObject();
+		JSONObject info = new JSONObject();		
 		for (int i = 0 ; i < instance_group_keys.length; ++i) {
 			
 			

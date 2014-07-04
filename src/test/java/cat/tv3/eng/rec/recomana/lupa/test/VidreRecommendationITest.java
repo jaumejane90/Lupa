@@ -113,9 +113,12 @@ public class VidreRecommendationITest {
 			}
 			
 			
-			Integer[] expected_reco_11 = new Integer[]{13,12,31,33,32,23,22,21};
-			Integer[] expected_reco_22 = new Integer[]{21,23,33,12,32,31,13,11};
-			Integer[] expected_reco_33 = new Integer[]{32,31,12,13,11,23,22,21};
+			//Integer[] expected_reco_11 = new Integer[]{13,12,31,33,32,23,22,21}; //without stop words
+			Integer[] expected_reco_11 = new Integer[]{32,33,13,23,12,31,22,21};
+			//Integer[] expected_reco_22 = new Integer[]{21,23,33,12,32,31,13,11}; //without stop words
+			Integer[] expected_reco_22 = new Integer[]{23,21,32,33,12,13,11,31};
+			//Integer[] expected_reco_33 = new Integer[]{32,31,12,13,11,23,22,21}; //without stop words
+			Integer[] expected_reco_33 = new Integer[]{31,32,12,11,13,23,22,21};
 			
 			testRecommendation(11 , expected_reco_11);	
 			testRecommendation(22, expected_reco_22);	

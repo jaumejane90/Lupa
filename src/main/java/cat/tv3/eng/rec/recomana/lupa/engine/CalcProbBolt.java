@@ -16,11 +16,17 @@ limitations under the License.
 
 package cat.tv3.eng.rec.recomana.lupa.engine;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import cat.calidos.storm.freeling.FlAnalyzedSentence.FlAnalyzedSentence;
+import cat.tv3.eng.rec.recomana.lupa.test.Datasets;
+import cat.tv3.eng.rec.recomana.lupa.test.TestTextInstance;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -33,6 +39,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 public class CalcProbBolt extends BaseRichBolt {
+	private final static String STOP_WORDS_EN = "StopWordsEn.txt";
 	private OutputCollector _collector;
 	final String host;
 	final int port;
@@ -52,6 +59,7 @@ public class CalcProbBolt extends BaseRichBolt {
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
 	     pool = new JedisPool(new JedisPoolConfig(),host,port);
+	     stopWordsToRedis();
 		
 	}
 
@@ -71,16 +79,18 @@ public class CalcProbBolt extends BaseRichBolt {
 		}      
 		
 		Map<String,String> prob_redis = new TreeMap<String,String>();
-		String Key;
-		Double Value;
+		String key;
+		Double value;
 		Double total=0.0;
 		jedis = pool.getResource();	
 		try {	
 			for(Map.Entry<String, Double> entry : distr_prob_text.getWordCounts().entrySet()){
-				Key = entry.getKey();
-				Value= entry.getValue();
-				prob_redis.put(Key, Value.toString());	
-				total+=Value;
+				key = entry.getKey();
+				value= entry.getValue();
+				if(!key.matches("(?!#)\\p{Punct}") && !jedis.hexists("StopWordsEn", key)) {
+					prob_redis.put(key, value.toString());	
+					total+=value;
+				}
 			}
 			distr_prob_text.setSize(total);
 			jedis.hmset("distr_text-id-"+id_text, prob_redis);					
@@ -96,6 +106,39 @@ public class CalcProbBolt extends BaseRichBolt {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		  declarer.declare(new Fields("id_text","distr_text")); 
 		
+	}
+	
+	public void stopWordsToRedis(){
+		InputStream is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_EN);
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		try {
+			String line;
+			while ((line = br.readLine()) != null) {
+				try {
+					Jedis jedis = pool.getResource();
+					try {	
+						jedis.hset("StopWordsEn", line, line);
+					} finally {
+						pool.returnResource(jedis);
+					}      
+				
+				} catch (Exception ex) {
+					System.err.println("Skipped twitter sample because it can't be parsed : " + line);
+				}
+			}			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 }
