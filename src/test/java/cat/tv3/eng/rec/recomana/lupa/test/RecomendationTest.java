@@ -44,6 +44,7 @@ public class RecomendationTest {
 		LupaItem vocabulary_test_2 = new LupaItem(words_test_2);
 				
 		KLDdistance classificador = new KLDdistance(vocabulary_test_1,vocabulary_test_2);
+		System.out.println(classificador.distance());
 		test(2.243,classificador.distance());		
 		
 	}

@@ -78,6 +78,10 @@ public class LupaItem implements Iterable<String>, Serializable {
 		}
 		return actualCount;
 	}
+	
+	public void remove(String key){
+		this.wordCounts.remove(key);
+	}
 
 	public Double frequency(String word) {
 		return this.count(word).doubleValue() / this.size.doubleValue();

@@ -69,7 +69,8 @@ public class CalcProbBolt extends BaseRichBolt {
 		String id_text = freeling_text.getOriginalTokens().get(freeling_text.getOriginalTokens().size()-1);		
 		List<String> list_words = freeling_text.getListStringMorfologicText();
 	    list_words.remove(list_words.size()-1);
-		LupaItem distr_prob_text = new LupaItem(list_words);		
+		LupaItem distr_prob_text = new LupaItem(list_words);	
+		LupaItem filtred_text = new LupaItem();	
 				
 		Jedis jedis = pool.getResource();
 		try {	
@@ -79,6 +80,7 @@ public class CalcProbBolt extends BaseRichBolt {
 		}      
 		
 		Map<String,String> prob_redis = new TreeMap<String,String>();
+		TreeMap<String, Double> distr_prob_text_filtred = new TreeMap<String, Double>();	
 		String key;
 		Double value;
 		Double total=0.0;
@@ -90,15 +92,20 @@ public class CalcProbBolt extends BaseRichBolt {
 				if(!key.matches("(?!#)\\p{Punct}") && !jedis.hexists("StopWordsEn", key)) {
 					prob_redis.put(key, value.toString());	
 					total+=value;
+					distr_prob_text_filtred.put(key, value);
 				}
+				
 			}
-			distr_prob_text.setSize(total);
+			
+			filtred_text.setWordCounts(distr_prob_text_filtred);
+			filtred_text.setSize(total);
+			
 			jedis.hmset("distr_text-id-"+id_text, prob_redis);					
 		} finally {
 			pool.returnResource(jedis);
 		}      		
         
-		_collector.emit(new Values(id_text,distr_prob_text));		
+		_collector.emit(new Values(id_text,filtred_text));		
 		
 	}
 	

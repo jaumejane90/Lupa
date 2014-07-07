@@ -93,6 +93,12 @@ public static JedisPool pool;
 				}
 			} 		
 			
+			//INSERTAR ORDRE
+			/*for (TestTextInstance instance : dataset) {
+				insertTextToRedis(instance);
+			}*/
+			
+			
 			Thread.sleep(300000);
 						
 			
