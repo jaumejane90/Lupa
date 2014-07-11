@@ -64,7 +64,7 @@ public class ClustersToJson {
 	  	    hierarchy.put("children", hashToJSONArrayRepresentationHierarchy(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
 	  		
 	    }	
-		System.out.println(cluster);
+		//System.out.println(cluster);
 		
 			
 		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("cluster.json"), "UTF-8"));
@@ -76,7 +76,7 @@ public class ClustersToJson {
 	    
 		//Visualize content of each cluster	   
 		
-		System.out.println(hierarchy);
+		//System.out.println(hierarchy);
 		
 		out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("hierarchy.json"), "UTF-8"));
 		try {

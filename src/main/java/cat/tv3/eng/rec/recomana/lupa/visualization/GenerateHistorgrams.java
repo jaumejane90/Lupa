@@ -1,24 +1,22 @@
 package cat.tv3.eng.rec.recomana.lupa.visualization;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.json.simple.JSONObject;
+
 
 import redis.clients.jedis.Jedis;
 
@@ -29,10 +27,13 @@ public class GenerateHistorgrams {
 	    int port = Integer.parseInt(args[1]);
 		Jedis jedis = new Jedis(host, port);
 		
+		createDir("data_tsv");
+		
 		String[] distr_prob_keys = jedis.keys("distr_text-id-*").toArray(new String[0]);	
-
-		for (int i = 0 ; i < distr_prob_keys.length; ++i) {		  
-			String id = distr_prob_keys[i].substring(distr_prob_keys[i].length() - 3);
+		
+		for (int i = 0 ; i < distr_prob_keys.length; ++i) {	
+			String[] split_distr_name =  distr_prob_keys[i].split("-");
+			String id = split_distr_name[split_distr_name.length-1];
 			//System.out.println(id);
 			Map<String,String> word_freq = jedis.hgetAll(distr_prob_keys[i]);
 			TreeMap<String,Double> top_words = new TreeMap<String,Double>();			
@@ -70,6 +71,24 @@ public class GenerateHistorgrams {
 	
 	}
 	
+	private static void createDir(String dir){
+		File theDir = new File(dir);
+		if (!theDir.exists()) {
+		    System.out.println("creating directory: " + dir);
+		    boolean result = false;
+
+		    try{
+		        theDir.mkdir();
+		        result = true;
+		     } catch(SecurityException se){
+		        //handle it
+		     }        
+		     if(result) {    
+		       System.out.println("DIR created");  
+		     }
+		  }
+	}
+	
 	private static String[] minimumValue(Map<String,Double> map) {
 		String key_minimum = "Error";
 		Double minimum = 0.0;
@@ -103,7 +122,7 @@ public class GenerateHistorgrams {
 				out.write("word" + "\t" +  "frequency" + "\n");
 				for(Map.Entry<String, Double> entry : map.entrySet()){
 					//System.out.println(entry.getKey() + " -> " + entry.getValue());
-					out.write(entry.getKey() + "\t" +  entry.getValue()/total + "\n");
+					out.write(entry.getKey() + "\t" +  (double)Math.round(entry.getValue()/total * 10000)/10000 + "\n");
 				}
 				out.close();
 				

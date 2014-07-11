@@ -79,7 +79,7 @@ public class StormLupaClusteredTopology {
 	    	 LocalCluster cluster = new LocalCluster();
 	    	 try {	
 	    		 cluster.submitTopology("test", new Config(), b.createTopology());
-	    		 Utils.sleep(1000000);	
+	    		 Utils.sleep(10000000);	
 	    	 } finally {
 	    		 try {
 	    			 cluster.shutdown();

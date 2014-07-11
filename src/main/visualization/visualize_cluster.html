@@ -45,7 +45,24 @@
 <script src="js/jquery-1.11.0.min.js"></script>
 <script src="js/d3.min.js"></script>
 <script src="js/binaryTreeVisualitzationD3.js"></script>
+<script src="js/myfunctions.js"></script>
 <body>
+    <div id="insert-text">
+          <!--form action="demo_form.asp" id="usrform">
+            Name: <input type="text" name="usrname">
+            <input type="submit">
+          </form>
+          <br>
+          <textarea rows="4" cols="50" name="comment" form="usrform">Enter text here...</textarea-->
+
+       
+          <input id="id_text" type="text" name="id_text" style="font-family: monospace;" value="Enter id here..."><br>
+          <input id="tittle_content" type="text" name="tittle_content" style="font-family: monospace;" value="Enter tittle here..."> <br>
+          <textarea id="text_content" rows="4" cols="50" name="text_content" form="usrform">Enter text here...</textarea>  <button onclick="insertText()">Insert</button>
+
+
+    </div>
     <div id="tree-container"></div>
+    <script>drawCluster()</script>
 </body>
 </html>
