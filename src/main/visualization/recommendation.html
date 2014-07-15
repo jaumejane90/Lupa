@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tablecloth.js demo</title>
+    <title>Lupa Recommendations</title>
     <link href="css/css_table/bootstrap.css" rel="stylesheet">
     <link href="css/css_table/bootstrap-responsive.css" rel="stylesheet">
     <link href="css/css_table/tablecloth.css" rel="stylesheet">   
@@ -34,7 +34,7 @@
         <script src="js/js_table/jquery.tablesorter.min.js"></script>
         <script src="js/js_table/jquery.tablecloth.js"></script>  
         <script src="js/js_table/fromJsontoTable.js"></script>
-        <script src="js/myfunctions.js"></script>
+        <script src="js/myfunctions.js"></script>     
         <script>
           var table = document.getElementsByTagName("table")[0];
           var tbody = table.getElementsByTagName("tbody")[0];
@@ -58,6 +58,7 @@
               }
               //alert(id_clicked);
               loadWordFreq(id_clicked,"#recommended_text"); 
+              printText(id_clicked,"#recommended_text")
           };
         </script>
 
@@ -136,10 +137,10 @@
               
               <div id="main_text">
                 <h1>Selected text</h1>
-
+                <p></p>
               </div>
                 <script>
-                   $("#main_text  h1").append(" " + window.location.search.substring(1).split("=")[1]); 
+                  // $("#main_text  h1").append(" " + window.location.search.substring(1).split("=")[1]); 
 
                   //console.log(window.location.search.substring(1).split("=")[1]);
                   var margin = {top: 40, right: 20, bottom: 30, left: 40},
@@ -178,7 +179,7 @@
 
                   svg.call(tip);
 
-                  d3.tsv("tsv/data_tsv/data_"+window.location.search.substring(1).split("=")[1]+".tsv", type, function(error, data) {
+                  d3.tsv("json/data_toVisualize/data_tsv/data_"+window.location.search.substring(1).split("=")[1]+".tsv", type, function(error, data) {
                     x.domain(data.map(function(d) { return d.word; }));
                     y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 
@@ -216,10 +217,20 @@
                   }
 
                   </script>
+                  <script>
+                  $(document).ready(function () { 
+                     $.getJSON("json/data_toVisualize/data_resume/resume_"+ window.location.search.substring(1).split("=")[1] +".json",
+                        function (data) {                         
+                            $("#main_text  h1").append(" " + data[0].tittle); 
+                            $("#main_text  p").append(" " + data[0].text);
+                      });
+                  });
+                  </script>
              
 
               <div id="recommended_text">
-                  <h1></h1>                  
+                  <h1></h1> 
+                  <p></p>                 
               </div>
 
 

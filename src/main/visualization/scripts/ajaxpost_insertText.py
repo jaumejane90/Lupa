@@ -7,13 +7,6 @@ import time
 
 #Change to your local folder from Lupa
 path = "/home/rec/shared/storm/Lupa" 
-source_cluster = "/home/rec/shared/storm/Lupa/cluster.json"
-destination_cluster = "/var/www/html/LupaVisualization/json/cluster.json"
-# source_recommendations = "/home/rec/shared/storm/Lupa/cluster.json"
-# destination_recommendations = "/var/www/html/LupaVisualization/json/cluster.json"
-# source_word_freq = "/home/rec/shared/storm/Lupa/cluster.json"
-# destination_word_freq = "/var/www/html/LupaVisualization/json/cluster.json"
-
 
 fs = cgi.FieldStorage()
 
@@ -22,9 +15,7 @@ id_text = fs.getvalue('id')
 title = fs.getvalue('title')
 text = fs.getvalue('text')
 
-# id_text = 9979
-# title = "tittle"
-# text = "text"
+
 
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -43,10 +34,8 @@ while not recommendationsGenerated:
 
 
 os.chdir(path)
-os.system('/home/rec/shared/apache-maven-3.2.1/bin/mvn -q exec:java -Dexec.mainClass="cat.tv3.eng.rec.recomana.lupa.visualization.ClustersToJson" -Dexec.args="172.21.110.182 6379"')
-shutil.copy(source_cluster,destination_cluster)
-# shutil.copy(source,destination)
-# shutil.copy(source,destination)
+os.system('/home/rec/shared/apache-maven-3.2.1/bin/mvn -q exec:java -Dexec.mainClass="cat.tv3.eng.rec.recomana.lupa.visualization.GenerateAllVisualization" -Dexec.args="172.21.110.182 6379"')
+os.system("cp -rf /home/rec/shared/storm/Lupa/data_toVisualize/ /home/rec/shared/Apache-httpd/LupaVisualization/json/data_toVisualize/")
 
 results2 = {}
 results2['id'] = id_text

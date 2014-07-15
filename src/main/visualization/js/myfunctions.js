@@ -1,3 +1,15 @@
+function printText(text_id,div_id){
+  $(document).ready(function () { 
+    $.getJSON("json/data_toVisualize/data_resume/resume_"+ text_id +".json",
+      function (data) {
+         $(div_id + "  h1").text(" " + data[0].tittle); 
+         $(div_id + "  p").text(" " + data[0].text);       
+    });
+  });
+
+}
+
+
 function insertText() 
 {  
   var new_id = $("#id_text").val();
@@ -24,7 +36,7 @@ function insertText()
 function loadWordFreq(text_id,div_id) 
 {
 	d3.select(div_id + " > svg ").remove();
-  $(div_id + " h1").text("Recommended Selected text " + text_id); 
+  //$(div_id + " h1").text("Recommended Selected text " + text_id); 
  //console.log(window.location.search.substring(1).split("=")[1]);
   var margin = {top: 40, right: 20, bottom: 30, left: 40},
       width = 960 - margin.left - margin.right,
@@ -62,7 +74,7 @@ function loadWordFreq(text_id,div_id)
 
   svg.call(tip);
 
-  d3.tsv("tsv/data_tsv/data_"+text_id+".tsv", type, function(error, data) {
+  d3.tsv("json/data_toVisualize/data_tsv/data_"+text_id+".tsv", type, function(error, data) {
     x.domain(data.map(function(d) { return d.word; }));
     y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 

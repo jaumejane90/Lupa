@@ -1,6 +1,6 @@
 // Get JSON data
 function drawCluster(){
-    treeJSON = d3.json("json/cluster.json", function(error, treeData) {
+    treeJSON = d3.json("json/data_toVisualize/cluster.json", function(error, treeData) {
 
         // Calculate total nodes, max label length
         var totalNodes = 0;
