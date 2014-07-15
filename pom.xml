@@ -52,6 +52,7 @@
 						   <redis_port>6379</redis_port>
 						   <freeling_host>localhost</freeling_host>
 						   <freeling_port>5050</freeling_port>
+						   <language>en</language>
 						</systemPropertyVariables>
 				   </configuration>
 				   <executions>

@@ -41,34 +41,37 @@ public class StormLupaClusteredTopology {
 						@IP redis freeling
 						freeling port	
 						maximum size of cluster
+						language(en,ca,es)
 					VM arguments
 							-Dfile.encoding=UTF-8 
 		*/
-		 if (args.length < 5 ) {
-	            throw new RuntimeException("Invalid number of arguments(redis_host,redis_port,freeling_host,freeling_port,maximum_size_of_cluster,[deploy_remote_name])");   	
+		 if (args.length < 6 ) {
+	            throw new RuntimeException("Invalid number of arguments(redis_host,redis_port,freeling_host,freeling_port,lang,maximum_size_of_cluster,[deploy_remote_name])");   	
 	     }
 	     
 		 String redis_host = args[0];
 	     int redis_port = Integer.parseInt(args[1]);
 	     String freeling_host = args[2];
 	     int freeling_port = Integer.parseInt(args[3]);
-	     int max_size_of_clusters = Integer.parseInt(args[4]); 
+	     String language = args[4];
+	     int max_size_of_clusters = Integer.parseInt(args[5]); 
+	    
 	
 	     TopologyBuilder b = new TopologyBuilder();
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
 	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
 	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("TextRedisSpout"); 
-	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port)).shuffleGrouping("FreelingBolt");
+	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
 	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	    
-	     if(args!=null && args.length > 5) {   //Storm Remot
+	     if(args!=null && args.length > 6) {   //Storm Remot
 	    	Config conf = new Config();
 			conf.setDebug(true);
 			conf.setNumWorkers(3); 
 			try {
-				StormSubmitter.submitTopology(args[5], conf, b.createTopology());
+				StormSubmitter.submitTopology(args[6], conf, b.createTopology());
 			} catch (AlreadyAliveException e) {				
 				e.printStackTrace();
 			} catch (InvalidTopologyException e) {				

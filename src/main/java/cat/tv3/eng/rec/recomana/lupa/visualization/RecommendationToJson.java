@@ -24,14 +24,14 @@ import org.json.simple.JSONObject;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
 
-public class recommendationToJson {
+public class RecommendationToJson {
 		public static void main(String[] args) throws IOException {		
 			final int TOTAL_WORDS = 20;
 			String host = args[0];
 		    int port = Integer.parseInt(args[1]);
 			Jedis jedis = new Jedis(host, port);
 			
-			createDir("data_recommendation");
+		
 			
 			String[] recommendation_keys = jedis.keys("recommendations_*").toArray(new String[0]);	
 				
@@ -49,7 +49,7 @@ public class recommendationToJson {
 			    	
 			    	JSONObject new_reco = new JSONObject();
 			    	new_reco.put("id",t.getElement());
-			    	new_reco.put("distance", t.getScore());
+			    	new_reco.put("distance", (double)Math.round(t.getScore() * 10000)/10000);
 			    	
 			    	recommendations.add(new_reco);
 			    }		              
@@ -58,31 +58,13 @@ public class recommendationToJson {
 			}		
 		}	
 		
-		private static void createDir(String dir){
-			File theDir = new File(dir);
-			if (!theDir.exists()) {
-			    System.out.println("creating directory: " + dir);
-			    boolean result = false;
-
-			    try{
-			        theDir.mkdir();
-			        result = true;
-			     } catch(SecurityException se){
-			        //handle it
-			     }        
-			     if(result) {    
-			       System.out.println("DIR created");  
-			     }
-			  }
-		}
-		
-		
+				
 		private static void saveResults(JSONArray recomendations, String id){
 			
 			Writer out;
 			try {
 				
-				out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_recommendation/recommendation_"+id+".json"), "UTF-8"));
+				out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_toVisualize/data_recommendation/recommendation_"+id+".json"), "UTF-8"));
 							
 				try {
 					out.write(recomendations.toJSONString());
@@ -102,6 +84,4 @@ public class recommendationToJson {
 			}		
 		}
 		
-		
-	
 }

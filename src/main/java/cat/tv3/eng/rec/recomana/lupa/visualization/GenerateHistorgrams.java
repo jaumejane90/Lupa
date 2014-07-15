@@ -27,7 +27,7 @@ public class GenerateHistorgrams {
 	    int port = Integer.parseInt(args[1]);
 		Jedis jedis = new Jedis(host, port);
 		
-		createDir("data_tsv");
+		
 		
 		String[] distr_prob_keys = jedis.keys("distr_text-id-*").toArray(new String[0]);	
 		
@@ -71,23 +71,8 @@ public class GenerateHistorgrams {
 	
 	}
 	
-	private static void createDir(String dir){
-		File theDir = new File(dir);
-		if (!theDir.exists()) {
-		    System.out.println("creating directory: " + dir);
-		    boolean result = false;
-
-		    try{
-		        theDir.mkdir();
-		        result = true;
-		     } catch(SecurityException se){
-		        //handle it
-		     }        
-		     if(result) {    
-		       System.out.println("DIR created");  
-		     }
-		  }
-	}
+	
+	
 	
 	private static String[] minimumValue(Map<String,Double> map) {
 		String key_minimum = "Error";
@@ -115,13 +100,11 @@ public class GenerateHistorgrams {
 	private static void saveResults(Map<String,Double> map, Integer id,Double total){
 		Writer out;
 		try {
-			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_tsv/data_"+id.toString()+".tsv"), "UTF-8"));
+			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_toVisualize/data_tsv/data_"+id.toString()+".tsv"), "UTF-8"));
 						
-			try {
-				//System.out.println("total -> " + total);
+			try {				
 				out.write("word" + "\t" +  "frequency" + "\n");
-				for(Map.Entry<String, Double> entry : map.entrySet()){
-					//System.out.println(entry.getKey() + " -> " + entry.getValue());
+				for(Map.Entry<String, Double> entry : map.entrySet()){					
 					out.write(entry.getKey() + "\t" +  (double)Math.round(entry.getValue()/total * 10000)/10000 + "\n");
 				}
 				out.close();

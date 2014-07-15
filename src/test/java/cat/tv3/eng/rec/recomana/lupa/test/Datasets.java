@@ -82,7 +82,7 @@ public class Datasets {
 					String[] values = line.split("&");					
 					TEST_TEXT_SAMPLE.add(new TestTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
 				} catch (Exception ex) {
-					System.err.println("Skipped twitter sample because it can't be parsed : " + line);
+					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
 			}			
 		} finally {
@@ -103,7 +103,7 @@ public class Datasets {
 					String[] values = line.split("&");						
 					TEST_TEXT_SAMPLE.add(new TestTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
 				} catch (Exception ex) {
-					System.err.println("Skipped twitter sample because it can't be parsed : " + line);
+					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
 			}
 			
@@ -126,7 +126,7 @@ public class Datasets {
 				try {
 					
 					String[] values = line.split("&");
-					System.out.println("Length -> " + values[2].length());
+					//System.out.println("Length -> " + values[2].length());
 					List<String> parts = new ArrayList<String>();
 					int size = 10000;
 					int length = values[2].length();
@@ -148,7 +148,7 @@ public class Datasets {
 				
 					// Show output
 					 
-					System.out.println("Number of parts -> " + parts.size());
+					//System.out.println("Number of parts -> " + parts.size());
 					 /*
 					for(int i = 0 ; i< parts.size(); i++) {
 						System.out.println(parts.get(i));
@@ -171,7 +171,7 @@ public class Datasets {
 					for(int i = 0 ; i< parts.size(); ++i) {
 						Integer id = 100 * Integer.parseInt(values[0]) + i;
 						//System.out.println("ID -> " + id);
-						TEST_TEXT_SAMPLE.add(new TestTextInstance(id,values[1]+"part_"+id,parts.get(i)));
+						TEST_TEXT_SAMPLE.add(new TestTextInstance(id,values[1]+" part "+id,parts.get(i)));
 					}
 					
 					  
@@ -180,7 +180,7 @@ public class Datasets {
 					
 					
 					} catch (Exception ex) {
-					System.err.println("Skipped twitter sample because it can't be parsed : " + line);
+					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
 			}
 			

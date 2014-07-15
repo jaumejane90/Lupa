@@ -34,14 +34,14 @@ public static JedisPool pool;
 			-Dredis_port=6379
 			-Dfreeling_host=172.21.110.182
 			-Dfreeling_port=5050	
+			-Dlanguage=en
 		*/
 		
 		 /* TEST FROM MVN TERMINAL
-		  * mvn package -Dredis_freeling_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_port=5050
+		  *  mvn failsafe:integration-test -Dit.test=LupaFullBooksITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
 		  */
-		
 		 /*
-		  *  Defaults  redis_freeling_host=localhost redis_port=6379 freeling_port=5050
+		  *  Defaults  redis_host=localhost redis_port=6379 freeling_host freeling_port=5050 language=en
 		  * 
 		  */	
 		
@@ -49,6 +49,8 @@ public static JedisPool pool;
          int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
          String freeling_host = System.getProperty("freeling_host");		
          int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
+         String language = System.getProperty("language");	
+         
 	     
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
@@ -60,7 +62,7 @@ public static JedisPool pool;
 	     TopologyBuilder b = new TopologyBuilder();
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
 	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
-	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port)).shuffleGrouping("FreelingBolt");
+	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,30)).shuffleGrouping("CalcProBolt");
 		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
@@ -87,7 +89,7 @@ public static JedisPool pool;
 			}
 			
 			for (int i = 10 ; i < dataset.size(); ++i) {	
-				if((i>=10 && i < 56) || (i >= 66 && i < 56+49) || (i >= 56+49)) {
+				if((i>=10 && i < 56) || (i >= 66 && i < 56+49) || (i >= 56+49+10)) {
 					//System.out.println(dataset.get(i).getId());
 					insertTextToRedis(dataset.get(i));
 				}

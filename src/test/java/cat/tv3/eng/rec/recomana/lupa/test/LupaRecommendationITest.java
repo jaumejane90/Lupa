@@ -41,33 +41,36 @@ import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
 
 
-public class VidreRecommendationITest {
+public class LupaRecommendationITest {
 	public static JedisPool pool;
 	
 	@Test
 	public void testInTopology() throws InterruptedException {		
 		 /*TEST FROM ECLIPSE -> RUN CONFIGURATION(Arguments -> VM Arguments) :
-		 	-Dfile.encoding=UTF-8
-			-Dredis_host=172.21.110.182
-			-Dredis_port=6379
-			-Dfreeling_host=172.21.110.182
-			-Dfreeling_port=5050
-		*/
-		
-		 /* TEST FROM MVN TERMINAL
-		  * mvn package -Dredis_freeling_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_port=5050
-		  */
-		
-		 /*
-		  *  Defaults  redis_freeling_host=localhost redis_port=6379 freeling_port=5050
-		  * 
-		  */
+	 	-Dfile.encoding=UTF-8
+		-Dredis_host=172.21.110.182
+		-Dredis_port=6379
+		-Dfreeling_host=172.21.110.182
+		-Dfreeling_port=5050	
+		-Dlanguage=en
+	*/
+	
+	 /* TEST FROM MVN TERMINAL
+	  *  mvn failsafe:integration-test -Dit.test=LupaRecommendationITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
+	  */
+	
+	 /*
+	  *  Defaults  redis_host=localhost redis_port=6379 freeling_host freeling_port=5050 language=en
+	  * 
+	  */	
+	
 		
 		 String redis_host = System.getProperty("redis_host");		
          int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
          String freeling_host = System.getProperty("freeling_host");		
          int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
-	     
+         String language = System.getProperty("language");	
+         
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
@@ -78,7 +81,7 @@ public class VidreRecommendationITest {
 	    TopologyBuilder b = new TopologyBuilder();
 	    b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
 		b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
-		b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port)).shuffleGrouping("FreelingBolt");
+		b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
 		b.setBolt("DispatcherBolt", new DispatcherBolt(redis_host,redis_port)).shuffleGrouping("CalcProBolt"); 
 		b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port,8)).shuffleGrouping("DispatcherBolt");
 	       

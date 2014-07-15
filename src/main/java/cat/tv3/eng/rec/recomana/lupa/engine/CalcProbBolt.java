@@ -40,14 +40,30 @@ import backtype.storm.tuple.Values;
 
 public class CalcProbBolt extends BaseRichBolt {
 	private final static String STOP_WORDS_EN = "StopWordsEn.txt";
+	private final static String STOP_WORDS_CA = "StopWordsCa.txt";
+	private final static String STOP_WORDS_ES = "StopWordsEs.txt";
+	private final static Integer SIZE_OF_REPRESENTATION_TEXT = 1000;
 	private OutputCollector _collector;
+	String lang;
 	final String host;
 	final int port;
 	JedisPool pool;
 	
-	public CalcProbBolt(String host, int port) {
+	/*public CalcProbBolt(String host, int port) {
 		this.host = host;
 		this.port = port;		
+	}*/
+	
+	public CalcProbBolt(String host, int port,String language) {
+		this.host = host;
+		this.port = port;
+		if(language!=null) {
+			this.lang = language;
+		}
+		else {
+			this.lang="en";
+		}
+		
 	}
 	
 
@@ -74,7 +90,15 @@ public class CalcProbBolt extends BaseRichBolt {
 				
 		Jedis jedis = pool.getResource();
 		try {	
-			jedis.del(id_text);				
+			String tittle = jedis.hget(id_text, "tittle");
+			String text = jedis.hget(id_text, "text");				
+			String new_text = text.substring(0, Math.min(text.length(), SIZE_OF_REPRESENTATION_TEXT));
+			jedis.del(id_text);
+			Map<String,String> id_representation = new TreeMap<String,String>();
+			id_representation.put("id", id_text);
+			id_representation.put("tittle", tittle);
+			id_representation.put("text", new_text);			
+			jedis.hmset("hash_id_" + id_text, id_representation);
 		} finally {
 			pool.returnResource(jedis);
 		}      
@@ -89,7 +113,7 @@ public class CalcProbBolt extends BaseRichBolt {
 			for(Map.Entry<String, Double> entry : distr_prob_text.getWordCounts().entrySet()){
 				key = entry.getKey();
 				value= entry.getValue();
-				if(!key.matches("(?!#)\\p{Punct}") && !jedis.hexists("StopWordsEn", key)) {
+				if(!key.matches("(?!#)\\p{Punct}") && !jedis.hexists("StopWords", key) && key.length()>1) {
 					prob_redis.put(key, value.toString());	
 					total+=value;
 					distr_prob_text_filtred.put(key, value);
@@ -116,15 +140,27 @@ public class CalcProbBolt extends BaseRichBolt {
 	}
 	
 	public void stopWordsToRedis(){
-		InputStream is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_EN);
+		InputStream is;		
+		if(lang.equals("ca")){
+			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_CA);
+		}
+		else if(lang.equals("es")){
+			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_ES);
+		}
+		else {
+			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_EN);
+		}
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		Jedis jedis = pool.getResource();
 		try {
 			String line;
+			jedis.del("StopWords");
 			while ((line = br.readLine()) != null) {
 				try {
-					Jedis jedis = pool.getResource();
+					
 					try {	
-						jedis.hset("StopWordsEn", line, line);
+						jedis.hset("StopWords", line, line);
 					} finally {
 						pool.returnResource(jedis);
 					}      
