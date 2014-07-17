@@ -72,8 +72,8 @@ public class CalcProbBolt extends BaseRichBolt {
 			OutputCollector collector) {
 		 _collector = collector; 
 		 JedisPoolConfig poolConfig = new JedisPoolConfig();
-	     poolConfig.setMaxActive(1);
-	     poolConfig.setMaxIdle(1);
+	     poolConfig.setMaxActive(8);
+	     poolConfig.setMaxIdle(8);
 	     pool = new JedisPool(new JedisPoolConfig(),host,port);
 	     stopWordsToRedis();
 		
@@ -113,6 +113,7 @@ public class CalcProbBolt extends BaseRichBolt {
 			for(Map.Entry<String, Double> entry : distr_prob_text.getWordCounts().entrySet()){
 				key = entry.getKey();
 				value= entry.getValue();
+				
 				if(!key.matches("(?!#)\\p{Punct}") && !jedis.hexists("StopWords", key) && key.length()>1) {
 					prob_redis.put(key, value.toString());	
 					total+=value;
@@ -123,7 +124,7 @@ public class CalcProbBolt extends BaseRichBolt {
 			
 			filtred_text.setWordCounts(distr_prob_text_filtred);
 			filtred_text.setSize(total);
-			
+			System.out.println("CALC PROB BOLT : id -> " + id_text + " prob_redis_size -> " + prob_redis.size());
 			jedis.hmset("distr_text-id-"+id_text, prob_redis);					
 		} finally {
 			pool.returnResource(jedis);
@@ -155,33 +156,19 @@ public class CalcProbBolt extends BaseRichBolt {
 		Jedis jedis = pool.getResource();
 		try {
 			String line;
-			jedis.del("StopWords");
+			jedis.del("StopWords");			
 			while ((line = br.readLine()) != null) {
-				try {
-					
-					try {	
-						jedis.hset("StopWords", line, line);
-					} finally {
-						pool.returnResource(jedis);
-					}      
+				jedis.hset("StopWords", line, line);				     
 				
-				} catch (Exception ex) {
-					System.err.println("Skipped twitter sample because it can't be parsed : " + line);
-				}
-			}			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-			
-		}
+					
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();	 
+		
+	    }finally {
+			pool.returnResource(jedis);
+		} 
 	}
 	
 }

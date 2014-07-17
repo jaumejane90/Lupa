@@ -30,7 +30,7 @@ import java.util.List;
 public class Datasets {
 	private final static String GUTENBERG_RECOMMENDATION_FILE = "gutenbergRecommendationResources.txt";
 	private final static String GUTENBERG_CLUSTERING_FILE = "gutenbergClusteringResources.txt";
-	private final static String GUTENBERG_FULL_BOOKS_FILE = "gutenbergFullBooksResources.txt";
+	private final static String GUTENBERG_FULL_BOOKS_FILE = "gutenberg6FullBooksResources.txt";
 
 
 	private static List<TestTextInstance> TEST_TEXT_SAMPLE;

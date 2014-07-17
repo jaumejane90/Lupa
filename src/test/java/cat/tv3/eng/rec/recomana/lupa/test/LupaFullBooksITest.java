@@ -75,21 +75,30 @@ public static JedisPool pool;
 			cluster.submitTopology("test", new Config(), b.createTopology());			
 			
 			List<TestTextInstance> dataset  = Datasets.getFullBooksSamples();
-			//Book 1 -> 56 parts , Book 2 -> 49 parts , Book 3 -> 33 parts
+			//Book 1 -> 56 parts , Book 2 -> 39 parts , Book 3 -> 49 parts, Book 4 -> 34 , Book 5 -> 61 , Book 6 -> 47
 			for(int i=0 ; i<10; ++i) {				
-				insertTextToRedis(dataset.get(i));
+				insertTextToRedis(dataset.get(i));				
 			}
-			for(int i=0 ; i<10; ++i) {
+			/*for(int i=0 ; i<10; ++i) {
 				//System.out.println(dataset.get(56+i).getId());
 				insertTextToRedis(dataset.get(56+i));
-			}
+			}*/
 			for(int i=0 ; i<10; ++i) {
 				//System.out.println(dataset.get(56+49+i).getId());
-				insertTextToRedis(dataset.get(56+49+i));
+				insertTextToRedis(dataset.get(56+39+i));
 			}
+			/*for(int i=0 ; i<10; ++i) {				
+				insertTextToRedis(dataset.get(56+39+49+i));
+			}*/
+			for(int i=0 ; i<10; ++i) {				
+				insertTextToRedis(dataset.get(56+39+49+34+i));
+			}/*
+			for(int i=0 ; i<10; ++i) {				
+				insertTextToRedis(dataset.get(56+39+49+34+61+i));
+			}*/
 			
 			for (int i = 10 ; i < dataset.size(); ++i) {	
-				if((i>=10 && i < 56) || (i >= 66 && i < 56+49) || (i >= 56+49+10)) {
+				if((i>=10 && i < 56) || (i >= 56/*+10*/ && i < 56+39) || (i >= 56+39+10 && i < 56+39+49) || (i >= 56+39+49/*+10*/ && i < 56+39+49+34)|| (i >= 56+39+49+34+10 && i < 56+39+61+49+34)|| (i >= 56+39+49+34+61/*+10*/)) {
 					//System.out.println(dataset.get(i).getId());
 					insertTextToRedis(dataset.get(i));
 				}
@@ -101,7 +110,7 @@ public static JedisPool pool;
 			}*/
 			
 			
-			Thread.sleep(300000);
+			Thread.sleep(3000000);
 						
 			
 		}finally {
@@ -113,6 +122,7 @@ public static JedisPool pool;
 
 
 	private static void insertTextToRedis(TestTextInstance instance){
+		System.out.println(instance.getId());
 		Jedis jedis = pool.getResource();
 		try {				
 			Integer id = instance.getId();
