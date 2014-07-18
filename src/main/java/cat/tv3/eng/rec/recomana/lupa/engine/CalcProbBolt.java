@@ -72,9 +72,9 @@ public class CalcProbBolt extends BaseRichBolt {
 			OutputCollector collector) {
 		 _collector = collector; 
 		 JedisPoolConfig poolConfig = new JedisPoolConfig();
-	     poolConfig.setMaxActive(8);
-	     poolConfig.setMaxIdle(8);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port);
+	     poolConfig.setMaxActive(32);
+	     poolConfig.setMaxIdle(32);
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
 	     stopWordsToRedis();
 		
 	}
@@ -87,6 +87,12 @@ public class CalcProbBolt extends BaseRichBolt {
 	    list_words.remove(list_words.size()-1);
 		LupaItem distr_prob_text = new LupaItem(list_words);	
 		LupaItem filtred_text = new LupaItem();	
+		
+		Map<String,String> prob_redis = new TreeMap<String,String>();
+		TreeMap<String, Double> distr_prob_text_filtred = new TreeMap<String, Double>();	
+		String key;
+		Double value;
+		Double total=0.0;
 				
 		Jedis jedis = pool.getResource();
 		try {	
@@ -99,17 +105,7 @@ public class CalcProbBolt extends BaseRichBolt {
 			id_representation.put("tittle", tittle);
 			id_representation.put("text", new_text);			
 			jedis.hmset("hash_id_" + id_text, id_representation);
-		} finally {
-			pool.returnResource(jedis);
-		}      
-		
-		Map<String,String> prob_redis = new TreeMap<String,String>();
-		TreeMap<String, Double> distr_prob_text_filtred = new TreeMap<String, Double>();	
-		String key;
-		Double value;
-		Double total=0.0;
-		jedis = pool.getResource();	
-		try {	
+			
 			for(Map.Entry<String, Double> entry : distr_prob_text.getWordCounts().entrySet()){
 				key = entry.getKey();
 				value= entry.getValue();
@@ -125,10 +121,13 @@ public class CalcProbBolt extends BaseRichBolt {
 			filtred_text.setWordCounts(distr_prob_text_filtred);
 			filtred_text.setSize(total);
 			System.out.println("CALC PROB BOLT : id -> " + id_text + " prob_redis_size -> " + prob_redis.size());
-			jedis.hmset("distr_text-id-"+id_text, prob_redis);					
+			jedis.hmset("distr_text-id-"+id_text, prob_redis);			
+			
 		} finally {
 			pool.returnResource(jedis);
-		}      		
+		}      
+				
+				
         
 		_collector.emit(new Values(id_text,filtred_text));		
 		

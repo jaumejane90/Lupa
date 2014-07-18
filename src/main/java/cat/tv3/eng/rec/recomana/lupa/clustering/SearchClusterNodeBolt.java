@@ -51,9 +51,9 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 			OutputCollector collector) {
 		 _collector = collector; 
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
-	     poolConfig.setMaxActive(1);
-	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port);
+	     poolConfig.setMaxActive(32);
+	     poolConfig.setMaxIdle(32);
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
 		
 	}
 
@@ -76,16 +76,16 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 		    	String id_left_centroid = attr_cluster.get("id_left_centroid");			
 				String id_right_centroid = attr_cluster.get("id_right_centroid");		
 		    	
-				Double dist_left = compareKLD(distr_text,id_left_centroid);
-				Double dist_right = compareKLD(distr_text,id_right_centroid);
+				Double dist_left = compareKLD(distr_text,id_left_centroid,jedis);
+				Double dist_right = compareKLD(distr_text,id_right_centroid,jedis);
 				
 				if(dist_left < dist_right) {
 					String hash_left = attr_cluster.get("hash_left");	
-					search_cluster_binarytree(id_text,distr_text,hash_left,2);
+					search_cluster_binarytree(id_text,distr_text,hash_left,2,jedis);
 				}
 				else {
 				    String hash_right = attr_cluster.get("hash_right");		
-					search_cluster_binarytree(id_text,distr_text,hash_right,2);
+					search_cluster_binarytree(id_text,distr_text,hash_right,2,jedis);
 				}	    	
 		    }
 		    else { 
@@ -96,7 +96,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 					   _collector.emit(new Values(id_text,distr_text,cluster_name));
 				   }
 				   else { 
-					   LupaClusterSet dataset = clusterList_toDataset(cluster_name);
+					   LupaClusterSet dataset = clusterList_toDataset(cluster_name,jedis);
 					   LupaKMeans kmeans = new LupaKMeans(2,100,new LupaItemDistance());						
 					   LupaClusterSet[] clusters = kmeans.cluster(dataset);
 					   
@@ -138,119 +138,106 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 		
 	}
 	
-	public LupaClusterSet clusterList_toDataset(String cluster_name){		
+	public LupaClusterSet clusterList_toDataset(String cluster_name,Jedis jedis){		
 		
 		LupaClusterSet dataset = new LupaClusterSet();
 		String[] ids_noticia_cluster = new String[0];
 		
-		Jedis jedis = pool.getResource();		
-		try{			
-			 ids_noticia_cluster = jedis.smembers(cluster_name).toArray(new String[0]);
-			 LupaClusterItem[] instances = new LupaClusterItem[ids_noticia_cluster.length];		
-			 for(int i = 0; i<ids_noticia_cluster.length; ++i){
-				 instances[i] = new LupaClusterItem(ids_noticia_cluster[i]);
-				 Map<String,String> distr_prob_map = jedis.hgetAll("distr_text-id-"+ids_noticia_cluster[i]);				
-				 instances[i].addTreeMapStrings(distr_prob_map);
-				 dataset.addInstance(instances[i]);
-			 }
-		} finally {
-			pool.returnResource(jedis);
-		} 	 
+		ids_noticia_cluster = jedis.smembers(cluster_name).toArray(new String[0]);
+		LupaClusterItem[] instances = new LupaClusterItem[ids_noticia_cluster.length];		
+		for(int i = 0; i<ids_noticia_cluster.length; ++i){
+			 instances[i] = new LupaClusterItem(ids_noticia_cluster[i]);
+			 Map<String,String> distr_prob_map = jedis.hgetAll("distr_text-id-"+ids_noticia_cluster[i]);				
+			 instances[i].addTreeMapStrings(distr_prob_map);
+			 dataset.addInstance(instances[i]);
+		}
+		 	 
 		return dataset;
 	}
 	
-	public void search_cluster_binarytree(String id_text, LupaItem distr_text,String hash_name,Integer h){
-		Jedis jedis = pool.getResource();			
+	public void search_cluster_binarytree(String id_text, LupaItem distr_text,String hash_name,Integer h,Jedis jedis){
 		
-		try {
 			
-			Map<String,String> attr_cluster = jedis.hgetAll(hash_name);				
-		    String cluster_name = attr_cluster.get("cluster_ids_name");	
-		    if(cluster_name.equals("cluster_splited")){ 
-		    	String id_left_centroid = attr_cluster.get("id_left_centroid");	
-				String id_right_centroid = attr_cluster.get("id_right_centroid");
-		    	
-				Double dist_left = compareKLD(distr_text,id_left_centroid);
-				Double dist_right = compareKLD(distr_text,id_right_centroid);
+		Map<String,String> attr_cluster = jedis.hgetAll(hash_name);				
+	    String cluster_name = attr_cluster.get("cluster_ids_name");	
+	    if(cluster_name.equals("cluster_splited")){ 
+	    	String id_left_centroid = attr_cluster.get("id_left_centroid");	
+			String id_right_centroid = attr_cluster.get("id_right_centroid");
+	    	
+			Double dist_left = compareKLD(distr_text,id_left_centroid,jedis);
+			Double dist_right = compareKLD(distr_text,id_right_centroid,jedis);
+			
+			if(dist_left < dist_right) {
+				String hash_left = attr_cluster.get("hash_left");		
+				search_cluster_binarytree(id_text,distr_text,hash_left,h+1,jedis);
+			}
+			else {
+			    String hash_right = attr_cluster.get("hash_right");		
+				search_cluster_binarytree(id_text,distr_text,hash_right,h+1,jedis);
+			}	    	
+	    }
+	    else { 
+	    	   jedis.sadd(cluster_name,id_text);
+	    	   String[] ids_noticia_cluster = jedis.smembers(cluster_name).toArray(new String[0]);				  
+			    
+			   if(ids_noticia_cluster.length < MAX_SIZE_OF_CLUSTERS) {
+				   _collector.emit(new Values(id_text,distr_text,cluster_name));
+			   }
+			   else { 
+				   LupaClusterSet dataset = clusterList_toDataset(cluster_name,jedis);
+				   LupaKMeans kmeans = new LupaKMeans(2,100,new LupaItemDistance());						
+				   LupaClusterSet[] clusters = kmeans.cluster(dataset);
+				   
+				   Map<String,String> new_attr_cluster = new TreeMap<String,String>();	
+				   LupaClusterItem[] centroids = kmeans.getCentroids();
+				   jedis.del(attr_cluster.get("cluster_ids_name"));
 				
-				if(dist_left < dist_right) {
-					String hash_left = attr_cluster.get("hash_left");		
-					search_cluster_binarytree(id_text,distr_text,hash_left,h+1);
-				}
-				else {
-				    String hash_right = attr_cluster.get("hash_right");		
-					search_cluster_binarytree(id_text,distr_text,hash_right,h+1);
-				}	    	
-		    }
-		    else { 
-		    	   jedis.sadd(cluster_name,id_text);
-		    	   String[] ids_noticia_cluster = jedis.smembers(cluster_name).toArray(new String[0]);				  
-				    
-				   if(ids_noticia_cluster.length < MAX_SIZE_OF_CLUSTERS) {
-					   _collector.emit(new Values(id_text,distr_text,cluster_name));
+				   new_attr_cluster.put("cluster_ids_name", "cluster_splited" );
+				   new_attr_cluster.put("id_left_centroid",centroids[0].getID());
+				   new_attr_cluster.put("hash_left","ClusterCentroid-ID_"+centroids[0].getID()+"_level_"+h);
+				   new_attr_cluster.put("id_right_centroid",centroids[1].getID());
+				   new_attr_cluster.put("hash_right","ClusterCentroid-ID_"+centroids[1].getID()+"_level_"+h);				  
+				   jedis.hmset(hash_name, new_attr_cluster);					   
+				
+				   jedis.hset("ClusterCentroid-ID_"+centroids[0].getID()+"_level_"+h, "cluster_ids_name", "Instances_centroid_ID_"+centroids[0].getID());
+			       String[] list_left_ids = clusters[0].listOfIdInstances();
+			       for(int i = 0 ; i<list_left_ids.length; ++i) {
+			    	   jedis.sadd("Instances_centroid_ID_"+centroids[0].getID(), list_left_ids[i]);
+			       }
+				  				   
+			       jedis.hset("ClusterCentroid-ID_"+centroids[1].getID()+"_level_"+h, "cluster_ids_name", "Instances_centroid_ID_"+centroids[1].getID());
+			       String[] list_right_ids = clusters[1].listOfIdInstances();
+			       for(int i = 0 ; i<list_right_ids.length; ++i) {
+			    	   jedis.sadd("Instances_centroid_ID_"+centroids[1].getID(), list_right_ids[i]);
+			       }
+				  				     			       
+				   if(clusters[0].containsIdVidreInstance(id_text)) {
+					   _collector.emit(new Values(id_text,distr_text,"Instances_centroid_ID_"+centroids[0].getID()));
 				   }
-				   else { 
-					   LupaClusterSet dataset = clusterList_toDataset(cluster_name);
-					   LupaKMeans kmeans = new LupaKMeans(2,100,new LupaItemDistance());						
-					   LupaClusterSet[] clusters = kmeans.cluster(dataset);
+				   else {
+					   _collector.emit(new Values(id_text,distr_text,"Instances_centroid_ID_"+centroids[1].getID()));
 					   
-					   Map<String,String> new_attr_cluster = new TreeMap<String,String>();	
-					   LupaClusterItem[] centroids = kmeans.getCentroids();
-					   jedis.del(attr_cluster.get("cluster_ids_name"));
-					
-					   new_attr_cluster.put("cluster_ids_name", "cluster_splited" );
-					   new_attr_cluster.put("id_left_centroid",centroids[0].getID());
-					   new_attr_cluster.put("hash_left","ClusterCentroid-ID_"+centroids[0].getID()+"_level_"+h);
-					   new_attr_cluster.put("id_right_centroid",centroids[1].getID());
-					   new_attr_cluster.put("hash_right","ClusterCentroid-ID_"+centroids[1].getID()+"_level_"+h);				  
-					   jedis.hmset(hash_name, new_attr_cluster);					   
-					
-					   jedis.hset("ClusterCentroid-ID_"+centroids[0].getID()+"_level_"+h, "cluster_ids_name", "Instances_centroid_ID_"+centroids[0].getID());
-				       String[] list_left_ids = clusters[0].listOfIdInstances();
-				       for(int i = 0 ; i<list_left_ids.length; ++i) {
-				    	   jedis.sadd("Instances_centroid_ID_"+centroids[0].getID(), list_left_ids[i]);
-				       }
-					  				   
-				       jedis.hset("ClusterCentroid-ID_"+centroids[1].getID()+"_level_"+h, "cluster_ids_name", "Instances_centroid_ID_"+centroids[1].getID());
-				       String[] list_right_ids = clusters[1].listOfIdInstances();
-				       for(int i = 0 ; i<list_right_ids.length; ++i) {
-				    	   jedis.sadd("Instances_centroid_ID_"+centroids[1].getID(), list_right_ids[i]);
-				       }
-					  				     			       
-					   if(clusters[0].containsIdVidreInstance(id_text)) {
-						   _collector.emit(new Values(id_text,distr_text,"Instances_centroid_ID_"+centroids[0].getID()));
-					   }
-					   else {
-						   _collector.emit(new Values(id_text,distr_text,"Instances_centroid_ID_"+centroids[1].getID()));
-						   
-					   }
-					   
-				   }			
-		    }					
-		} finally {
-			pool.returnResource(jedis);
-		}       
+				   }
+				   
+			   }			
+	    }					
+	     
 		
 	}
 	
-	public Double compareKLD(LupaItem vidreitem, String id_text){		
+	public Double compareKLD(LupaItem vidreitem, String id_text,Jedis jedis){		
 		TreeMap<String, Double> distr_prob = new TreeMap<String,Double>();
 		String Key;
 		Double Value;
 		Double total=0.0;
-		Jedis jedis = pool.getResource();
-		try {
-			Map<String,String> distr_prob_map = jedis.hgetAll("distr_text-id-"+id_text);
-			for(Map.Entry<String, String> entry : distr_prob_map.entrySet()){					
-					Key = entry.getKey();
-					Value= Double.parseDouble(entry.getValue());			
-					distr_prob.put(Key, Value);
-					total+=Value;				
-			}			
-				
-		} finally {
-			pool.returnResource(jedis);
-		}       		
+		
+		Map<String,String> distr_prob_map = jedis.hgetAll("distr_text-id-"+id_text);
+		for(Map.Entry<String, String> entry : distr_prob_map.entrySet()){					
+				Key = entry.getKey();
+				Value= Double.parseDouble(entry.getValue());			
+				distr_prob.put(Key, Value);
+				total+=Value;				
+		}	  		
 		
 		LupaItem to_compare = new LupaItem();
 		to_compare.setWordCounts(distr_prob);
