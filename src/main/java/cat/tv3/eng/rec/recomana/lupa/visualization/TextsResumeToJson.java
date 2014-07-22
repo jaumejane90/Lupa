@@ -21,7 +21,7 @@ public class TextsResumeToJson {
 	public static void main(String[] args) throws IOException {			
 		String host = args[0];
 	    int port = Integer.parseInt(args[1]);
-		Jedis jedis = new Jedis(host, port);	
+		Jedis jedis = new Jedis(host, port,20000);	
 		
 		
 		String[] text_keys = jedis.keys("hash_id_*").toArray(new String[0]);	
@@ -40,8 +40,10 @@ public class TextsResumeToJson {
 			 resume.add(text);
 		               
 		     //save recommendation
+			 
 			saveResults(resume,id);			
-		}		
+		}	
+		jedis.disconnect();
 		
 	}
 	

@@ -29,7 +29,7 @@ public class RecommendationToJson {
 			final int TOTAL_WORDS = 20;
 			String host = args[0];
 		    int port = Integer.parseInt(args[1]);
-			Jedis jedis = new Jedis(host, port);
+			Jedis jedis = new Jedis(host, port,20000);
 			
 		
 			
@@ -55,7 +55,8 @@ public class RecommendationToJson {
 			    }		              
 			     //save recommendation
 				saveResults(recommendations,id);			
-			}		
+			}	
+			jedis.disconnect();
 		}	
 		
 				

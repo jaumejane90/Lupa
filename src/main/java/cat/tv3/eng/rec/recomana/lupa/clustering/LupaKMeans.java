@@ -26,6 +26,8 @@ public class LupaKMeans  {
     private Random rg;  
     private LupaItemDistance distance_function;   
     private LupaClusterItem[] centroids;
+    private Integer[] id_centroids;
+    
 
       
     public LupaKMeans(int clusters, int iterations, LupaItemDistance d) {
@@ -59,7 +61,7 @@ public class LupaKMeans  {
         boolean stillGeneratingNewClusters = true;
         boolean thereAreRandomClustersLeft = true;
         while (thereAreRandomClustersLeft || (itCount < this.maximumOfIterations && stillGeneratingNewClusters)) {
-        	itCount++;          
+        	itCount++;         	
            
             int[] assigs = assignInstasncestoCentroids(clusterset,centroids);            
             int[] sizeCluster = new int[this.clusters];              
@@ -72,15 +74,30 @@ public class LupaKMeans  {
                     Integer index = clusterset.findProximity(newMathematicsCentroids[i]);                	
                     if (distance_function.distance(clusterset.getInstance(index), centroids[i]) > 0.0001) {
                         stillGeneratingNewClusters = true;
+                        id_centroids[i] = index;
                         centroids[i] = clusterset.getInstance(index);
                     }                  	
                 } else {                    
                     thereAreRandomClustersLeft = true;
-                    this.centroids[i] = clusterset.getInstance(rg.nextInt(clusterset.size())); 
+                    int random_centroid = rg.nextInt(clusterset.size());
+                    id_centroids[i] = random_centroid;
+                    this.centroids[i] = clusterset.getInstance(random_centroid); 
                 }
-             }
-        }
-      
+            }
+            
+            if(centroids[0].getID()==centroids[1].getID() && itCount < this.maximumOfIterations){
+        		randomCentroids1(clusterset);        		
+        	    thereAreRandomClustersLeft = true;
+        	}
+            else if(centroids[0].getID()==centroids[1].getID() && itCount >= this.maximumOfIterations){
+            	 randomCentroids1(clusterset);  
+            	 if(centroids[0].getID().equals(centroids[1].getID())) {System.out.println("IN-----------------------------> SAME ID");}
+                 
+                return clustertoDataset(clusterset, centroids);
+            }
+        	
+        }     
+        if(centroids[0].getID().equals(centroids[1].getID())) {System.out.println("OUT-----------------------------> SAME ID");}
         return clustertoDataset(clusterset, centroids);
     }
     
@@ -103,12 +120,30 @@ public class LupaKMeans  {
     
     private LupaClusterItem[] randomCentroids(LupaClusterSet dataset){
     	  Integer rand_centroid_gen;
-          LupaClusterItem[] centroids = new LupaClusterItem[clusters];       
+          LupaClusterItem[] centroids = new LupaClusterItem[clusters];  
+          id_centroids = new Integer[clusters];   
           for (int i = 0; i < clusters; i++) {
           	rand_centroid_gen = rg.nextInt(dataset.size());           	
-          	centroids[i] = dataset.getInstance(rand_centroid_gen);        	
+          	centroids[i] = dataset.getInstance(rand_centroid_gen);  
+          	if(i==0) {
+          		id_centroids[0] = rand_centroid_gen;
+          	}
+          	else if(i==1) {
+          		id_centroids[1] = rand_centroid_gen;
+          		while(id_centroids[0] == id_centroids[1]) {
+          			id_centroids[1] = rg.nextInt(dataset.size());
+          			centroids[i] = dataset.getInstance(id_centroids[1]);
+          		}
+          	}
           }
     	return centroids;
+    }
+    
+    private void randomCentroids1(LupaClusterSet dataset){  	
+    	while(id_centroids[0] == id_centroids[1]) {
+			id_centroids[1] = rg.nextInt(dataset.size());
+			centroids[1] = dataset.getInstance(id_centroids[1]);
+		}  	    
     }
     
     private LupaClusterItem[] findMatethmaticCentroids(LupaClusterSet dataset, int[] sizeCluster, int[] assigs){

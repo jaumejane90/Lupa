@@ -64,7 +64,7 @@ public class CompareTextBolt extends BaseRichBolt {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port);
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
 		
 	}
 

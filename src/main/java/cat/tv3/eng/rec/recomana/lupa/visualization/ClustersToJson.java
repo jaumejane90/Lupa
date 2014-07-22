@@ -33,14 +33,12 @@ public class ClustersToJson {
 		
 		String host = args[0];
 	    int port = Integer.parseInt(args[1]);
-		Jedis jedis = new Jedis(host, port);
+		Jedis jedis = new Jedis(host, port,20000);
 		
 		// Cluster to binary tree visualitzation
 		Map<String,String> attr_cluster = jedis.hgetAll("ClusterBinaryTree-Arrel");				
-	    String cluster_name = attr_cluster.get("cluster_ids_name");
-	   
+	    String cluster_name = attr_cluster.get("cluster_ids_name");  
 	    
-	    JSONObject hierarchy;
 	    JSONObject cluster;
 	    if(!cluster_name.equals("cluster_splited")) {
 	    	 cluster = new JSONObject();	    	
@@ -51,16 +49,15 @@ public class ClustersToJson {
 			String id_right_centroid = attr_cluster.get("id_right_centroid");			
 	    	
 			String hash_left = attr_cluster.get("hash_left");		
-			String hash_right = attr_cluster.get("hash_right");
-							    	
+			String hash_right = attr_cluster.get("hash_right");		
+			
 	    	cluster = new JSONObject();
-	    	hierarchy = new JSONObject();
-	  	    cluster.put("name", "arrel");
+	        cluster.put("name", "arrel");
 	  		cluster.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
 	  			  	  
 	    }	
 		
-		
+	    jedis.disconnect();
 			
 		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_toVisualize/cluster.json"), "UTF-8"));
 		try {
@@ -68,6 +65,8 @@ public class ClustersToJson {
 		} finally {
 		    out.close();
 		}
+		
+		
 	    
 			
 		
@@ -79,8 +78,7 @@ public class ClustersToJson {
 		 JSONArray result = new JSONArray();
 		 JSONObject info;
 		 Map<String,String> attr_cluster = jedis.hgetAll(hash);				
-		 String cluster_name = attr_cluster.get("cluster_ids_name");
-		
+		 String cluster_name = attr_cluster.get("cluster_ids_name");		
 		if(!cluster_name.equals("cluster_splited")) {
 			 info = new JSONObject();
 			 info.put("name", "Centroid " + id);	
@@ -94,16 +92,18 @@ public class ClustersToJson {
 	    	
 			String hash_left = attr_cluster.get("hash_left");		
 			String hash_right = attr_cluster.get("hash_right");
-							    	
+			
 			info = new JSONObject();
 			info.put("name", "Centroid " + id);
 			info.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
 			
+			
 	    }
-		result.add(info);
+		result.add(info);		
 		
-		 attr_cluster = jedis.hgetAll(hash2);				
-		 cluster_name = attr_cluster.get("cluster_ids_name");
+		
+		attr_cluster = jedis.hgetAll(hash2);				
+		cluster_name = attr_cluster.get("cluster_ids_name");
 		    
 		if(!cluster_name.equals("cluster_splited")) {
 			 info = new JSONObject();
@@ -118,13 +118,14 @@ public class ClustersToJson {
 	    	
 			String hash_left = attr_cluster.get("hash_left");		
 			String hash_right = attr_cluster.get("hash_right");
-							    	
+					
+			
 			info = new JSONObject();
 			info.put("name", "Centroid " + id2);
 			info.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
 			
 	    }
-		result.add(info);
+		result.add(info);		
 		return result;
 	}	
 	
@@ -139,7 +140,7 @@ public class ClustersToJson {
 				info.put("name", instancesOfGroup[j]);				
 				result.add(info);  
 			}				
-		}	
+		}		
 		return result;
 	}
 
