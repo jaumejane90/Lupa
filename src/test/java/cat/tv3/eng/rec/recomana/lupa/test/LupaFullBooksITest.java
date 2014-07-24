@@ -55,7 +55,7 @@ public static JedisPool pool;
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port);
+	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port,20000);
 		
 	        
 		 
@@ -74,7 +74,7 @@ public static JedisPool pool;
 			// Build topology
 			cluster.submitTopology("test", new Config(), b.createTopology());			
 			
-			List<TestTextInstance> dataset  = Datasets.getFullBooksSamples();
+			List<DatasetTextInstance> dataset  = Datasets.getFullBooksSamples();
 			//Book 1 -> 56 parts , Book 2 -> 39 parts , Book 3 -> 49 parts, Book 4 -> 34 , Book 5 -> 61 , Book 6 -> 47
 			for(int i=0 ; i<10; ++i) {				
 				insertTextToRedis(dataset.get(i));				
@@ -121,7 +121,7 @@ public static JedisPool pool;
 	}
 
 
-	private static void insertTextToRedis(TestTextInstance instance){
+	private static void insertTextToRedis(DatasetTextInstance instance){
 		System.out.println(instance.getId());
 		Jedis jedis = pool.getResource();
 		try {				

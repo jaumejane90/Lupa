@@ -16,13 +16,13 @@ limitations under the License.
 
 package cat.tv3.eng.rec.recomana.lupa.test;
 
-public class TestTextInstance {	
+public class DatasetTextInstance {	
 	
 	private Integer id;	
 	private String tittle;
 	private String text;
 	
-	public TestTextInstance(Integer id, String tittle , String text) {		
+	public DatasetTextInstance(Integer id, String tittle , String text) {		
 		this.id = id;		
 		this.tittle = tittle;
 		this.text = text;

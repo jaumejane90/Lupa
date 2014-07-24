@@ -26,7 +26,6 @@ import java.util.TreeMap;
 
 import cat.calidos.storm.freeling.FlAnalyzedSentence.FlAnalyzedSentence;
 import cat.tv3.eng.rec.recomana.lupa.test.Datasets;
-import cat.tv3.eng.rec.recomana.lupa.test.TestTextInstance;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -37,6 +36,8 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+
+
 
 public class CalcProbBolt extends BaseRichBolt {
 	private final static String STOP_WORDS_EN = "StopWordsEn.txt";

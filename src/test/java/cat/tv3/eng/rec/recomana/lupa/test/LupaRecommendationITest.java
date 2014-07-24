@@ -74,7 +74,7 @@ public class LupaRecommendationITest {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port);
+	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port,20000);
 		
 	        
 		 
@@ -92,8 +92,8 @@ public class LupaRecommendationITest {
 			// Build topology
 			cluster.submitTopology("test", new Config(), b.createTopology());			
 			
-			List<TestTextInstance> dataset  = Datasets.getRecommendationSamples();
-			for (TestTextInstance instance : dataset) {
+			List<DatasetTextInstance> dataset  = Datasets.getRecommendationSamples();
+			for (DatasetTextInstance instance : dataset) {
 				insertTextToRedis(instance);
 			} 		
 			
@@ -136,7 +136,7 @@ public class LupaRecommendationITest {
 	}
 
 
-	private static void insertTextToRedis(TestTextInstance instance){
+	private static void insertTextToRedis(DatasetTextInstance instance){
 		Jedis jedis = pool.getResource();
 		try {				
 			Integer id = instance.getId();

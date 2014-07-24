@@ -37,6 +37,7 @@ import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
 import cat.calidos.storm.freeling.socket.FreelingBolt;
+
 import cat.tv3.eng.rec.recomana.lupa.clustering.DispatcherClusterBolt;
 import cat.tv3.eng.rec.recomana.lupa.clustering.SearchClusterNodeBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
@@ -95,8 +96,8 @@ public class LupaClusteringITest {
 			// Build topology
 			cluster.submitTopology("test", new Config(), b.createTopology());			
 			
-			List<TestTextInstance> dataset  = Datasets.getClusteringSamples();
-			for (TestTextInstance instance : dataset) {
+			List<DatasetTextInstance> dataset  = Datasets.getClusteringSamples();
+			for (DatasetTextInstance instance : dataset) {
 				insertTextToRedis(instance);
 			} 		
 			
@@ -134,7 +135,7 @@ public class LupaClusteringITest {
 	}
 
 
-	private static void insertTextToRedis(TestTextInstance instance){
+	private static void insertTextToRedis(DatasetTextInstance instance){
 		Jedis jedis = pool.getResource();
 		try {				
 			Integer id = instance.getId();

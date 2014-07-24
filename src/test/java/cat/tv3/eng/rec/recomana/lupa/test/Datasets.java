@@ -33,9 +33,9 @@ public class Datasets {
 	private final static String GUTENBERG_FULL_BOOKS_FILE = "gutenberg6FullBooksResources.txt";
 
 
-	private static List<TestTextInstance> TEST_TEXT_SAMPLE;
+	private static List<DatasetTextInstance> TEST_TEXT_SAMPLE;
 	
-	public static List<TestTextInstance> getRecommendationSamples() {	
+	public static List<DatasetTextInstance> getRecommendationSamples() {	
 		if (TEST_TEXT_SAMPLE == null) {
 			try {
 				loadRecommendationSample();
@@ -46,7 +46,7 @@ public class Datasets {
 		return TEST_TEXT_SAMPLE;
 	}
 	
-	public static List<TestTextInstance> getClusteringSamples() {	
+	public static List<DatasetTextInstance> getClusteringSamples() {	
 		if (TEST_TEXT_SAMPLE == null) {
 			try {
 				loadClusteringSample();
@@ -57,7 +57,7 @@ public class Datasets {
 		return TEST_TEXT_SAMPLE;
 	}
 	
-	public static List<TestTextInstance> getFullBooksSamples() {	
+	public static List<DatasetTextInstance> getFullBooksSamples() {	
 		if (TEST_TEXT_SAMPLE == null) {
 			try {
 				loadFullBooksSample();
@@ -71,7 +71,7 @@ public class Datasets {
 
 
 	protected static void loadRecommendationSample() throws IOException {
-		TEST_TEXT_SAMPLE = new ArrayList<TestTextInstance>();
+		TEST_TEXT_SAMPLE = new ArrayList<DatasetTextInstance>();
 		
 		InputStream is = Datasets.class.getClassLoader().getResourceAsStream(GUTENBERG_RECOMMENDATION_FILE);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -80,7 +80,7 @@ public class Datasets {
 			while ((line = br.readLine()) != null) {
 				try {
 					String[] values = line.split("&");					
-					TEST_TEXT_SAMPLE.add(new TestTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
+					TEST_TEXT_SAMPLE.add(new DatasetTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
 				} catch (Exception ex) {
 					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
@@ -92,7 +92,7 @@ public class Datasets {
 	}
 	
 	protected static void loadClusteringSample() throws IOException {
-		TEST_TEXT_SAMPLE = new ArrayList<TestTextInstance>();
+		TEST_TEXT_SAMPLE = new ArrayList<DatasetTextInstance>();
 		
 		InputStream is = Datasets.class.getClassLoader().getResourceAsStream(GUTENBERG_CLUSTERING_FILE);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -101,7 +101,7 @@ public class Datasets {
 			while ((line = br.readLine()) != null) {
 				try {
 					String[] values = line.split("&");						
-					TEST_TEXT_SAMPLE.add(new TestTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
+					TEST_TEXT_SAMPLE.add(new DatasetTextInstance(Integer.parseInt(values[0]),values[1],values[2]));
 				} catch (Exception ex) {
 					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
@@ -115,7 +115,7 @@ public class Datasets {
 	
 	protected static void loadFullBooksSample() throws IOException {
 		
-		TEST_TEXT_SAMPLE = new ArrayList<TestTextInstance>();
+		TEST_TEXT_SAMPLE = new ArrayList<DatasetTextInstance>();
 		
 		InputStream is = Datasets.class.getClassLoader().getResourceAsStream(GUTENBERG_FULL_BOOKS_FILE);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -171,7 +171,7 @@ public class Datasets {
 					for(int i = 0 ; i< parts.size(); ++i) {
 						Integer id = 100 * Integer.parseInt(values[0]) + i;
 						//System.out.println("ID -> " + id);
-						TEST_TEXT_SAMPLE.add(new TestTextInstance(id,values[1]+" part "+id,parts.get(i)));
+						TEST_TEXT_SAMPLE.add(new DatasetTextInstance(id,values[1]+" part "+id,parts.get(i)));
 					}
 					
 					  
