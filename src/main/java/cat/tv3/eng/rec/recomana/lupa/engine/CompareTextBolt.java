@@ -16,10 +16,17 @@ limitations under the License.
 
 package cat.tv3.eng.rec.recomana.lupa.engine;
 
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+
+
+
 
 
 import redis.clients.jedis.Jedis;
@@ -32,6 +39,11 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cat.calidos.storm.task.SocketBolt;
+
 
 public class CompareTextBolt extends BaseRichBolt {
 	private OutputCollector _collector;
@@ -39,6 +51,7 @@ public class CompareTextBolt extends BaseRichBolt {
 	final int port;
 	JedisPool pool;
 	private int NUMBER_OF_RECOMENDATIONS = 4;
+	public static Logger LOG = LoggerFactory.getLogger(CompareTextBolt.class);
 	
 	public CompareTextBolt() {
 		this.host = "localhost";
@@ -65,11 +78,11 @@ public class CompareTextBolt extends BaseRichBolt {
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
 	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
-		
+		 start_time();
 	}
 
 	@Override
-	public void execute(Tuple input) {
+	public void execute(Tuple input) {		
 		String id_text = input.getStringByField("id_text");
 		LupaItem distr_text = (LupaItem)input.getValueByField("distr_text");
 		String id_compare = input.getStringByField("id_compare");
@@ -136,12 +149,17 @@ public class CompareTextBolt extends BaseRichBolt {
 				            	jedis.zadd("recommendations_"+id_compare, distancia, id_text);
 				            }		                
 				     }
-				}				
+				}
+				Date now = new Date();
+				jedis.set("end_time", now.toString());
+				
 					
 			} finally {
 				pool.returnResource(jedis);
-			}   
+			} 
+			//LOG.info("End compareTextBolt: id1="+id_text + " id2="+id_compare);	
 		}	
+		
 		
 	}
 	
@@ -149,6 +167,16 @@ public class CompareTextBolt extends BaseRichBolt {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		  declarer.declare(new Fields("id_text","id_compare","distance")); 
 		
+	}
+	
+	private void start_time(){
+		Jedis jedis = pool.getResource();
+		try {		
+			Date now = new Date();
+			jedis.set("start_time", now.toString());			
+	    }finally {
+			pool.returnResource(jedis);
+		} 
 	}
 	
 }

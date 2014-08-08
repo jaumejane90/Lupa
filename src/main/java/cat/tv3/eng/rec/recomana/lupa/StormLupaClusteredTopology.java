@@ -28,6 +28,7 @@ import cat.tv3.eng.rec.recomana.lupa.clustering.DispatcherClusterBolt;
 import cat.tv3.eng.rec.recomana.lupa.clustering.SearchClusterNodeBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
+import cat.tv3.eng.rec.recomana.lupa.engine.FreelingBoltSimulator;
 import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
 public class StormLupaClusteredTopology {
@@ -61,15 +62,22 @@ public class StormLupaClusteredTopology {
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
 	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
 	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("TextRedisSpout"); 
+	     //NO BALANCED
 	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
 	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	    
+	     //BALANCED
+	   /*  b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language),2).setNumTasks(2).shuffleGrouping("FreelingBolt");
+	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters),2).setNumTasks(2).shuffleGrouping("CalcProBolt");
+	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
+	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port),2).setNumTasks(2).shuffleGrouping("DispatcherClusterBolt");*/
+	    
 	     if(args!=null && args.length > 6) {   //Storm Remot
 	    	Config conf = new Config();
 			conf.setDebug(true);
-			conf.setNumWorkers(3); 
+			conf.setNumWorkers(8); 
 			try {
 				StormSubmitter.submitTopology(args[6], conf, b.createTopology());
 			} catch (AlreadyAliveException e) {				

@@ -50,7 +50,7 @@ public class FreelingBoltSimulator extends BaseRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		//String id_noticia = input.getStringByField("id_noticia");
-		String text = input.getStringByField("text+noticia");
+		String text = input.getStringByField("text+id");
 		FlAnalyzedSentence freeling_noticia = (FlAnalyzedSentence) new FlAnalyzedSentence(); 
 		
 		ArrayList<ArrayList<String>> morfologicTokens = new ArrayList<ArrayList<String>>();	

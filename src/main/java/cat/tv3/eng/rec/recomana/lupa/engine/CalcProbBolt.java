@@ -25,7 +25,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cat.calidos.storm.freeling.FlAnalyzedSentence.FlAnalyzedSentence;
-import cat.tv3.eng.rec.recomana.lupa.test.Datasets;
+
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -89,6 +90,8 @@ public class CalcProbBolt extends BaseRichBolt {
 		LupaItem distr_prob_text = new LupaItem(list_words);	
 		LupaItem filtred_text = new LupaItem();	
 		
+	
+		
 		Map<String,String> prob_redis = new TreeMap<String,String>();
 		TreeMap<String, Double> distr_prob_text_filtred = new TreeMap<String, Double>();	
 		String key;
@@ -121,7 +124,7 @@ public class CalcProbBolt extends BaseRichBolt {
 			
 			filtred_text.setWordCounts(distr_prob_text_filtred);
 			filtred_text.setSize(total);
-			System.out.println("CALC PROB BOLT : id -> " + id_text + " prob_redis_size -> " + prob_redis.size());
+			//System.out.println("CALC PROB BOLT : id -> " + id_text + " prob_redis_size -> " + prob_redis.size());
 			jedis.hmset("distr_text-id-"+id_text, prob_redis);			
 			
 		} finally {
@@ -143,13 +146,13 @@ public class CalcProbBolt extends BaseRichBolt {
 	public void stopWordsToRedis(){
 		InputStream is;		
 		if(lang.equals("ca")){
-			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_CA);
+			is = CalcProbBolt.class.getClassLoader().getResourceAsStream(STOP_WORDS_CA);
 		}
 		else if(lang.equals("es")){
-			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_ES);
+			is = CalcProbBolt.class.getClassLoader().getResourceAsStream(STOP_WORDS_ES);
 		}
 		else {
-			is = Datasets.class.getClassLoader().getResourceAsStream(STOP_WORDS_EN);
+			is = CalcProbBolt.class.getClassLoader().getResourceAsStream(STOP_WORDS_EN);
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
