@@ -63,16 +63,16 @@ public class StormLupaClusteredTopology {
 	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
 	     //b.setBolt("FreelingBolt", new FreelingBoltSimulator()).shuffleGrouping("TextRedisSpout"); 
 	     //NO BALANCED
-	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
-	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
-	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
-	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
+	     //b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
+	    // b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters)).shuffleGrouping("CalcProBolt");
+	    // b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
+	    // b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	    
 	     //BALANCED
-	   /*  b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language),2).setNumTasks(2).shuffleGrouping("FreelingBolt");
+	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language),2).setNumTasks(2).shuffleGrouping("FreelingBolt");
 	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,max_size_of_clusters),2).setNumTasks(2).shuffleGrouping("CalcProBolt");
 	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
-	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port),2).setNumTasks(2).shuffleGrouping("DispatcherClusterBolt");*/
+	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port),2).setNumTasks(2).shuffleGrouping("DispatcherClusterBolt");
 	    
 	     if(args!=null && args.length > 6) {   //Storm Remot
 	    	Config conf = new Config();
