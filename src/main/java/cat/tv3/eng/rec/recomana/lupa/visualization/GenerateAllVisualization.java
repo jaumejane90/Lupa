@@ -14,7 +14,7 @@ public class GenerateAllVisualization {
 		
 		createDir("data_toVisualize");
 		
-		//csj.main(args);
+		csj.main(args);
 		
 		createDir("data_toVisualize/data_tsv");
 		gh.main(args);
