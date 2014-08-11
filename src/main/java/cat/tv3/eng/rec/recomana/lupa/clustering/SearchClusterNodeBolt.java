@@ -42,8 +42,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 	public SearchClusterNodeBolt(String host, int port, int max_size_of_clusters) {
 		this.host = host;
 		this.port = port;	
-		this.MAX_SIZE_OF_CLUSTERS = max_size_of_clusters;
-		
+		this.MAX_SIZE_OF_CLUSTERS = max_size_of_clusters;		
 	}	
 	
 	@Override
@@ -53,8 +52,7 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(32);
 	     poolConfig.setMaxIdle(32);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
-		
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);		
 	}
 
 	@Override
@@ -250,8 +248,6 @@ public class SearchClusterNodeBolt  extends BaseRichBolt {
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		  declarer.declare(new Fields("id_text","distr_text","cluster_name")); 
-		
+		  declarer.declare(new Fields("id_text","distr_text","cluster_name")); 		
 	}
-
 }

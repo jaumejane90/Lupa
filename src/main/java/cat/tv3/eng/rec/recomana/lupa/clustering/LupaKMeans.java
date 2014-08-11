@@ -28,15 +28,12 @@ public class LupaKMeans  {
     private LupaClusterItem[] centroids;
     private Integer[] id_centroids;
     
-
-      
     public LupaKMeans(int clusters, int iterations, LupaItemDistance d) {
         this.clusters = clusters;
         this.maximumOfIterations = iterations;
         this.distance_function = d;
         rg = new Random(System.currentTimeMillis());
-    }  
-    
+    }      
 
     public LupaClusterItem[] getCentroids() {
 		return centroids;
@@ -45,7 +42,6 @@ public class LupaKMeans  {
 	public void setCentroids(LupaClusterItem[] centroids) {
 		this.centroids = centroids;
 	}
-
 	
     public LupaClusterSet[] cluster(LupaClusterSet clusterset) {
         if (clusterset.size() == 0) {
@@ -90,14 +86,10 @@ public class LupaKMeans  {
         	    thereAreRandomClustersLeft = true;
         	}
             else if(centroids[0].getID()==centroids[1].getID() && itCount >= this.maximumOfIterations){
-            	 randomCentroids1(clusterset);  
-            	 if(centroids[0].getID().equals(centroids[1].getID())) {System.out.println("IN-----------------------------> SAME ID");}
-                 
-                return clustertoDataset(clusterset, centroids);
-            }
-        	
+            	 randomCentroids1(clusterset);              	
+                 return clustertoDataset(clusterset, centroids);
+            }        	
         }     
-        if(centroids[0].getID().equals(centroids[1].getID())) {System.out.println("OUT-----------------------------> SAME ID");}
         return clustertoDataset(clusterset, centroids);
     }
     

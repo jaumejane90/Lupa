@@ -16,18 +16,11 @@ limitations under the License.
 
 package cat.tv3.eng.rec.recomana.lupa.engine;
 
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-
-
-
-
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -41,9 +34,6 @@ import backtype.storm.tuple.Tuple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cat.calidos.storm.task.SocketBolt;
-
 
 public class CompareTextBolt extends BaseRichBolt {
 	private OutputCollector _collector;
@@ -67,8 +57,7 @@ public class CompareTextBolt extends BaseRichBolt {
 		this.host = host;
 		this.port = port;	
 		this.NUMBER_OF_RECOMENDATIONS = number_recommendations;
-	}	
-
+	}
 
 	@Override
 	public void prepare(Map stormConf, TopologyContext context,
@@ -132,8 +121,7 @@ public class CompareTextBolt extends BaseRichBolt {
 				            	jedis.zadd("recommendations_"+id_text, distancia, id_compare);
 				            }		                
 				     }
-				}
-				
+				}				
 				
 				actual_number_recomendations = jedis.zcard("recommendations_"+id_compare);
 				if(actual_number_recomendations <= NUMBER_OF_RECOMENDATIONS){
@@ -151,22 +139,17 @@ public class CompareTextBolt extends BaseRichBolt {
 				     }
 				}
 				Date now = new Date();
-				jedis.set("end_time", now.toString());
-				
+				jedis.set("end_time", now.toString());				
 					
 			} finally {
 				pool.returnResource(jedis);
-			} 
-			//LOG.info("End compareTextBolt: id1="+id_text + " id2="+id_compare);	
-		}	
-		
-		
+			} 			
+		}		
 	}
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		  declarer.declare(new Fields("id_text","id_compare","distance")); 
-		
+		  declarer.declare(new Fields("id_text","id_compare","distance")); 		
 	}
 	
 	private void start_time(){

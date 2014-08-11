@@ -53,10 +53,8 @@ public class ClustersToJson {
 			
 	    	cluster = new JSONObject();
 	        cluster.put("name", "arrel");
-	  		cluster.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
-	  			  	  
-	    }	
-		
+	  		cluster.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));  			  
+	    }			
 	    jedis.disconnect();
 			
 		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data_toVisualize/cluster.json"), "UTF-8"));
@@ -64,15 +62,8 @@ public class ClustersToJson {
 		    out.write(cluster.toJSONString());
 		} finally {
 		    out.close();
-		}
-		
-		
-	    
-			
-		
+		}		
 	}
-	
-	
 	
 	public static JSONArray hashToJSONArrayRepresentationBinaryTree(String id ,String hash,Jedis jedis,String id2 ,String hash2 ){
 		 JSONArray result = new JSONArray();
@@ -81,8 +72,7 @@ public class ClustersToJson {
 		 String cluster_name = attr_cluster.get("cluster_ids_name");		
 		if(!cluster_name.equals("cluster_splited")) {
 			 info = new JSONObject();
-			 info.put("name", "Centroid " + id);	
-			 
+			 info.put("name", "Centroid " + id);			 
 			 String[] instance_group_keys = jedis.keys("Instances_centroid_ID_"+id).toArray(new String[0]);			
 			 info.put("children",fullestoArray(instance_group_keys,jedis));
 	    }
@@ -96,11 +86,8 @@ public class ClustersToJson {
 			info = new JSONObject();
 			info.put("name", "Centroid " + id);
 			info.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
-			
-			
 	    }
 		result.add(info);		
-		
 		
 		attr_cluster = jedis.hgetAll(hash2);				
 		cluster_name = attr_cluster.get("cluster_ids_name");
@@ -118,17 +105,14 @@ public class ClustersToJson {
 	    	
 			String hash_left = attr_cluster.get("hash_left");		
 			String hash_right = attr_cluster.get("hash_right");
-					
 			
 			info = new JSONObject();
 			info.put("name", "Centroid " + id2);
 			info.put("children", hashToJSONArrayRepresentationBinaryTree(id_left_centroid,hash_left,jedis,id_right_centroid,hash_right));
-			
-	    }
+	   }
 		result.add(info);		
 		return result;
 	}	
-	
 	
 	public static JSONArray fullestoArray(String[] instance_group_keys,Jedis jedis){
 		JSONArray result = new JSONArray(); 

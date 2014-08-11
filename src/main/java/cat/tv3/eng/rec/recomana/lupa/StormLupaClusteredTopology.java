@@ -28,7 +28,6 @@ import cat.tv3.eng.rec.recomana.lupa.clustering.DispatcherClusterBolt;
 import cat.tv3.eng.rec.recomana.lupa.clustering.SearchClusterNodeBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
-import cat.tv3.eng.rec.recomana.lupa.engine.FreelingBoltSimulator;
 import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
 public class StormLupaClusteredTopology {
@@ -74,7 +73,7 @@ public class StormLupaClusteredTopology {
 	     b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port),2).setNumTasks(2).shuffleGrouping("DispatcherClusterBolt");
 	    
-	     if(args!=null && args.length > 6) {   //Storm Remot
+	     if(args!=null && args.length > 6) {   //Storm Remote
 	    	Config conf = new Config();
 			conf.setDebug(true);
 			conf.setNumWorkers(8); 

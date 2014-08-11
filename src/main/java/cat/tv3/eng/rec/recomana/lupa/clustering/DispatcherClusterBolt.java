@@ -32,6 +32,7 @@ import backtype.storm.tuple.Values;
 import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 
 public class DispatcherClusterBolt  extends BaseRichBolt {
+	
 	private OutputCollector _collector;
 	final String host;
 	final int port;
@@ -49,8 +50,7 @@ public class DispatcherClusterBolt  extends BaseRichBolt {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
-		
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);		
 	}
 
 	@Override
@@ -68,13 +68,11 @@ public class DispatcherClusterBolt  extends BaseRichBolt {
 			}				
 		} finally {
 			pool.returnResource(jedis);
-		}   
-		
+		}   		
 	}
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		  declarer.declare(new Fields("id_text","distr_text","id_compare")); 
-		
 	}
 }

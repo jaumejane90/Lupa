@@ -38,8 +38,6 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
-
-
 public class CalcProbBolt extends BaseRichBolt {
 	private final static String STOP_WORDS_EN = "StopWordsEn.txt";
 	private final static String STOP_WORDS_CA = "StopWordsCa.txt";
@@ -51,10 +49,11 @@ public class CalcProbBolt extends BaseRichBolt {
 	final int port;
 	JedisPool pool;
 	
-	/*public CalcProbBolt(String host, int port) {
+	public CalcProbBolt(String host, int port) {
 		this.host = host;
-		this.port = port;		
-	}*/
+		this.port = port;
+		this.lang="en";
+	}
 	
 	public CalcProbBolt(String host, int port,String language) {
 		this.host = host;
@@ -64,8 +63,7 @@ public class CalcProbBolt extends BaseRichBolt {
 		}
 		else {
 			this.lang="en";
-		}
-		
+		}		
 	}
 	
 
@@ -77,8 +75,7 @@ public class CalcProbBolt extends BaseRichBolt {
 	     poolConfig.setMaxActive(32);
 	     poolConfig.setMaxIdle(32);
 	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
-	     stopWordsToRedis();
-		
+	     stopWordsToRedis();		
 	}
 
 	@Override
@@ -89,8 +86,6 @@ public class CalcProbBolt extends BaseRichBolt {
 	    list_words.remove(list_words.size()-1);
 		LupaItem distr_prob_text = new LupaItem(list_words);	
 		LupaItem filtred_text = new LupaItem();	
-		
-	
 		
 		Map<String,String> prob_redis = new TreeMap<String,String>();
 		TreeMap<String, Double> distr_prob_text_filtred = new TreeMap<String, Double>();	
@@ -118,29 +113,22 @@ public class CalcProbBolt extends BaseRichBolt {
 					prob_redis.put(key, value.toString());	
 					total+=value;
 					distr_prob_text_filtred.put(key, value);
-				}
-				
-			}
-			
+				}				
+			}			
 			filtred_text.setWordCounts(distr_prob_text_filtred);
 			filtred_text.setSize(total);
-			//System.out.println("CALC PROB BOLT : id -> " + id_text + " prob_redis_size -> " + prob_redis.size());
 			jedis.hmset("distr_text-id-"+id_text, prob_redis);			
 			
 		} finally {
 			pool.returnResource(jedis);
-		}      
-				
-				
-        
-		_collector.emit(new Values(id_text,filtred_text));		
+		}             
+		_collector.emit(new Values(id_text,filtred_text));	
 		
 	}
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		  declarer.declare(new Fields("id_text","distr_text")); 
-		
+		  declarer.declare(new Fields("id_text","distr_text")); 		
 	}
 	
 	public void stopWordsToRedis(){
@@ -161,17 +149,13 @@ public class CalcProbBolt extends BaseRichBolt {
 			String line;
 			jedis.del("StopWords");			
 			while ((line = br.readLine()) != null) {
-				jedis.hset("StopWords", line, line);				     
-				
+				jedis.hset("StopWords", line, line);					
 			}
 					
-		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();	 
-		
+		}catch (IOException e) {			
+			e.printStackTrace();			
 	    }finally {
 			pool.returnResource(jedis);
 		} 
-	}
-	
+	}	
 }

@@ -21,15 +21,13 @@ package cat.tv3.eng.rec.recomana.lupa.engine;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class KLDdistance {
 	private LupaItem VidreItem;
 	private LupaItem VidreItem_toCompare;
 	private double thresholdFactor = 10.0;	
 	
 	private Double epsilon = null;
-	
-	
+		
 	public  KLDdistance(){
 		
 	}
@@ -42,25 +40,20 @@ public class KLDdistance {
 	private Set<String> createGlobalVocabulary() {
 		Set<String> vocabulary = new HashSet<String>();
 		vocabulary.addAll(VidreItem.wordSet());
-		vocabulary.addAll(VidreItem_toCompare.wordSet());
-		
+		vocabulary.addAll(VidreItem_toCompare.wordSet());		
 		return vocabulary;
 	}
 		
 	public Double distance() {
 		double distance;
 		double beta_voc1 = this.caculateBeta(VidreItem);		
-		double beta_voc2 = this.caculateBeta(VidreItem_toCompare); 	
-		
+		double beta_voc2 = this.caculateBeta(VidreItem_toCompare); 			
 		distance = this.distance(beta_voc1,beta_voc2);	
-
 		return distance;
-
 	}
 	
 	private double distance(double beta_1, double beta_2){
 		Double distance = 0.0;
-
 		Set<String> vocabulary = this.createGlobalVocabulary();	
 		Double tpc;
 		Double tpd;
@@ -69,8 +62,7 @@ public class KLDdistance {
 			tpd = this.wordProbabilityInDocument(word, this.VidreItem_toCompare, beta_2);
 			distance += (tpc - tpd) * Math.log(tpc / tpd);
 		}
-		return distance;
-		
+		return distance;		
 	}	
 	
 	protected Double wordProbabilityInDocument(String word, LupaItem documentVocabulary, double beta) {
@@ -80,14 +72,12 @@ public class KLDdistance {
 		} else {			
 			probability *= beta;
 		}
-
 		return probability;
 	}
 	
 	protected double caculateBeta(LupaItem documentVocabulary) {
 		Double beta = 1.0;
 		Double epsilon = this.getEpsilon();
-
 		Set<String> globalVocabulary = this.createGlobalVocabulary();
 
 		for (String word : globalVocabulary) {
@@ -95,7 +85,6 @@ public class KLDdistance {
 				beta -= epsilon;
 			}
 		}
-
 		return beta;
 	}
 	
@@ -115,9 +104,5 @@ public class KLDdistance {
 		}
 		else maxSize=cand2;		
 		return 1 / (this.thresholdFactor * maxSize.doubleValue());
-	}
-
-	
-
-	
+	}	
 }

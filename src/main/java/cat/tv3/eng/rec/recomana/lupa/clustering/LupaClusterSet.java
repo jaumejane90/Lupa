@@ -56,8 +56,7 @@ public class LupaClusterSet {
 	    
 	    public void addInstance(LupaClusterItem instance){
 	    	dataset.add(instance);
-	    }	    
-	  
+	    }	   
 	    
 	    public boolean containsIdVidreInstance(String id){
 	    	for(int i = 0 ; i < dataset.size(); ++i) {
@@ -71,8 +70,6 @@ public class LupaClusterSet {
 	    	for(int i = 0 ; i < dataset.size(); ++i) {
 	    		list[i] = dataset.get(i).getID();
 	    	}
-	    	return list;
-	    	
-	    }
-	   
+	    	return list;	    	
+	    }	   
 }

@@ -30,9 +30,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
-
-public class DispatcherBolt  extends BaseRichBolt {
-	
+public class DispatcherBolt  extends BaseRichBolt {	
 	private OutputCollector _collector;
 	final String host;
 	final int port;
@@ -50,8 +48,7 @@ public class DispatcherBolt  extends BaseRichBolt {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);
-		
+	     pool = new JedisPool(new JedisPoolConfig(),host,port,20000);		
 	}
 
 	@Override

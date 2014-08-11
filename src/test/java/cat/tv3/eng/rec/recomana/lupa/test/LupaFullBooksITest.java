@@ -1,8 +1,23 @@
+/**
+Copyright 2014 Jaume Jané 
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package cat.tv3.eng.rec.recomana.lupa.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -35,7 +50,7 @@ public static JedisPool pool;
 			-Dfreeling_host=172.21.110.182
 			-Dfreeling_port=5050	
 			-Dlanguage=en
-		*/
+		 */
 		
 		 /* TEST FROM MVN TERMINAL
 		  *  mvn failsafe:integration-test -Dit.test=LupaFullBooksITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
@@ -49,15 +64,12 @@ public static JedisPool pool;
          int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
          String freeling_host = System.getProperty("freeling_host");		
          int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
-         String language = System.getProperty("language");	
-         
+         String language = System.getProperty("language");	         
 	     
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port,20000);
-		
-	        
+	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port,20000);        
 		 
 	     TopologyBuilder b = new TopologyBuilder();
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
@@ -67,8 +79,7 @@ public static JedisPool pool;
 		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
 	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
 	         
-		LocalCluster cluster = new LocalCluster();
-		
+		LocalCluster cluster = new LocalCluster();	
 		
 		try {
 			// Build topology
@@ -79,44 +90,24 @@ public static JedisPool pool;
 			for(int i=0 ; i<10; ++i) {				
 				insertTextToRedis(dataset.get(i));				
 			}
-			/*for(int i=0 ; i<10; ++i) {
-				//System.out.println(dataset.get(56+i).getId());
-				insertTextToRedis(dataset.get(56+i));
-			}*/
-			for(int i=0 ; i<10; ++i) {
-				//System.out.println(dataset.get(56+49+i).getId());
+			
+			for(int i=0 ; i<10; ++i) {				
 				insertTextToRedis(dataset.get(56+39+i));
 			}
-			/*for(int i=0 ; i<10; ++i) {				
-				insertTextToRedis(dataset.get(56+39+49+i));
-			}*/
+			
 			for(int i=0 ; i<10; ++i) {				
 				insertTextToRedis(dataset.get(56+39+49+34+i));
-			}/*
-			for(int i=0 ; i<10; ++i) {				
-				insertTextToRedis(dataset.get(56+39+49+34+61+i));
-			}*/
+			}
 			
 			for (int i = 10 ; i < dataset.size(); ++i) {	
 				if((i>=10 && i < 56) || (i >= 56/*+10*/ && i < 56+39) || (i >= 56+39+10 && i < 56+39+49) || (i >= 56+39+49/*+10*/ && i < 56+39+49+34)|| (i >= 56+39+49+34+10 && i < 56+39+61+49+34)|| (i >= 56+39+49+34+61/*+10*/)) {
-					//System.out.println(dataset.get(i).getId());
 					insertTextToRedis(dataset.get(i));
 				}
 			} 		
 			
-			//INSERTAR ORDRE
-			/*for (TestTextInstance instance : dataset) {
-				insertTextToRedis(instance);
-			}*/
-			
-			
-			Thread.sleep(3000000);
-						
-			
+			Thread.sleep(3000000);			
 		}finally {
-			/*try {				
-				cluster.shutdown();				
-			} catch (Exception e) {}*/		
+				
 		}	
 	}
 
@@ -135,10 +126,7 @@ public static JedisPool pool;
 			text_attr.put("tittle", tittle);
 			text_attr.put("text", text);
 			jedis.hmset(id.toString(), text_attr);				
-			jedis.rpush("text_queue",id.toString());
-			
-			
-						 		
+			jedis.rpush("text_queue",id.toString());						 		
 		} finally {
 			pool.returnResource(jedis);
 		} 

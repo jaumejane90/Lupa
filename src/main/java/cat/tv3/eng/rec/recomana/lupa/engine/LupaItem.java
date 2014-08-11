@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-
-
 public class LupaItem implements Iterable<String>, Serializable {
 	
 	private TreeMap<String, Double> wordCounts = new TreeMap<String, Double>();	

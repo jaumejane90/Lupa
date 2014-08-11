@@ -31,8 +31,6 @@ public class Datasets {
 	private final static String GUTENBERG_RECOMMENDATION_FILE = "gutenbergRecommendationResources.txt";
 	private final static String GUTENBERG_CLUSTERING_FILE = "gutenbergClusteringResources.txt";
 	private final static String GUTENBERG_FULL_BOOKS_FILE = "gutenberg6FullBooksResources.txt";
-
-
 	private static List<DatasetTextInstance> TEST_TEXT_SAMPLE;
 	
 	public static List<DatasetTextInstance> getRecommendationSamples() {	
@@ -67,9 +65,7 @@ public class Datasets {
 		}
 		return TEST_TEXT_SAMPLE;
 	}
-
-
-
+	
 	protected static void loadRecommendationSample() throws IOException {
 		TEST_TEXT_SAMPLE = new ArrayList<DatasetTextInstance>();
 		
@@ -123,38 +119,25 @@ public class Datasets {
 		try {
 			String line;
 			while ((line = br.readLine()) != null) {
-				try {
-					
-					String[] values = line.split("&");
-					//System.out.println("Length -> " + values[2].length());
+				try {					
+					String[] values = line.split("&");					
 					List<String> parts = new ArrayList<String>();
 					int size = 10000;
 					int length = values[2].length();
-					for(int i = 0 ; i < length; i+=size) {
-						 //System.out.println("i  " + i);
+					for(int i = 0 ; i < length; i+=size) {						
 						 int nextdot = 0 ;
 						 boolean nextdotfound = false;
 						 for(int j = (i+size) ; j < length && !nextdotfound; j++) {
 							 nextdot ++;
-							 if(values[2].charAt(j)=='.') {
-								// System.out.println("FOUND -> " + line.charAt(j));
+							 if(values[2].charAt(j)=='.') {								
 								 nextdotfound=true;
 							 }							 
 						 }
 						
 						 parts.add(values[2].substring(i, Math.min(length, i + size + nextdot)));
 						 i+=nextdot;
-					}					
-				
-					// Show output
-					 
-					//System.out.println("Number of parts -> " + parts.size());
-					 /*
-					for(int i = 0 ; i< parts.size(); i++) {
-						System.out.println(parts.get(i));
 					}
-					System.out.println("Number of parts -> " + parts.size());
-					*/
+					
 					Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("parts_"+values[1] +".txt"), "UTF-8"));
 					try {						
 						out.write(parts.size()+"\n");
@@ -166,20 +149,12 @@ public class Datasets {
 					  
 					} finally {
 					    out.close();
-					}  
-					
+					} 					
 					for(int i = 0 ; i< parts.size(); ++i) {
-						Integer id = 100 * Integer.parseInt(values[0]) + i;
-						//System.out.println("ID -> " + id);
+						Integer id = 100 * Integer.parseInt(values[0]) + i;						
 						TEST_TEXT_SAMPLE.add(new DatasetTextInstance(id,values[1]+" part "+id,parts.get(i)));
-					}
-					
-					  
-					 
-					
-					
-					
-					} catch (Exception ex) {
+					}					
+				} catch (Exception ex) {
 					System.err.println("Skipped sample because it can't be parsed : " + line);
 				}
 			}
@@ -189,6 +164,4 @@ public class Datasets {
 			br.close();
 		}
 	}
-
-
 }

@@ -22,7 +22,8 @@ import cat.tv3.eng.rec.recomana.lupa.engine.LupaItem;
 
 public class LupaItemDistance {
 	
-	public LupaItemDistance() {	      
+	public LupaItemDistance() {	
+		
 	}
 	
 	public double distance(LupaClusterItem x, LupaClusterItem y){			
@@ -37,6 +38,5 @@ public class LupaItemDistance {
 		KLDdistance calculador = new KLDdistance(Instance_x,Instance_y);
 		return calculador.distance();	
 	}
-
 	
 }

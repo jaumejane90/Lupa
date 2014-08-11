@@ -17,17 +17,10 @@ limitations under the License.
 package cat.tv3.eng.rec.recomana.lupa.test;
 
 import static org.junit.Assert.assertEquals;
-
-
-
-
-
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
@@ -57,7 +50,7 @@ public class LupaClusteringITest {
 			-Dfreeling_host=172.21.110.182
 			-Dfreeling_port=5050	
 			-Dlanguage=en
-		*/
+		 */
 		
 		 /* TEST FROM MVN TERMINAL
 		  * mvn failsafe:integration-test -Dit.test=LupaClustringITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
@@ -77,9 +70,7 @@ public class LupaClusteringITest {
 	     JedisPoolConfig poolConfig = new JedisPoolConfig();
 	     poolConfig.setMaxActive(1);
 	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port);
-		
-	        
+	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port);        
 		 
 	     TopologyBuilder b = new TopologyBuilder();
 	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
@@ -128,9 +119,7 @@ public class LupaClusteringITest {
 						
 			
 		}finally {
-			/*try {				
-				cluster.shutdown();				
-			} catch (Exception e) {}*/		
+			
 		}	
 	}
 

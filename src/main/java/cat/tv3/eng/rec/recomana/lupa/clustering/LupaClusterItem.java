@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-
 public class LupaClusterItem implements Map<String,Double>, Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -39,21 +38,18 @@ public class LupaClusterItem implements Map<String,Double>, Serializable {
 	
 	public LupaClusterItem(String id) {
 		this.ID = id;
-		this.count = 0.0;
-	      
+		this.count = 0.0;	      
 	}
 
 	public LupaClusterItem(TreeMap<String,Double> text_freq, String id, Double count) {
        this.text_freq = text_freq;
        this.ID = id;
-       this.count = count;
-      
+       this.count = count;      
     }	
 	
 	public TreeMap<String, Double> getText_freq() {
 		return text_freq;
 	}
-
 	
 	public void add(String word) {
 		Double actualCount = this.text_freq.get(word);
@@ -82,7 +78,6 @@ public class LupaClusterItem implements Map<String,Double>, Serializable {
 		this.text_freq.put(word, actualCount);
 		this.count+=number;
 	}
-
 	
 	public void addTreeMap(TreeMap<String,Double> words) {
 		String key;
@@ -116,8 +111,7 @@ public class LupaClusterItem implements Map<String,Double>, Serializable {
 			this.put(key,new_value);				
 		}	
 		Double old_count = this.count;
-		this.count = old_count / x;
-		//this.recount();
+		this.count = old_count / x;		
 	}
 	
 	public void setText_freq(TreeMap<String, Double> text_freq) {
@@ -139,8 +133,7 @@ public class LupaClusterItem implements Map<String,Double>, Serializable {
 			value= entry.getValue();
 			count += value;		
 		}			
-		this.count = count;
-		
+		this.count = count;		
 	}
 
 	public Double getCount() {
@@ -153,8 +146,7 @@ public class LupaClusterItem implements Map<String,Double>, Serializable {
 
 	@Override
 	public void clear() {
-		text_freq.clear();
-		
+		text_freq.clear();		
 	}
 
 	@Override

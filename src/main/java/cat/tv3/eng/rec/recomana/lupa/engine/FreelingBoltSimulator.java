@@ -17,12 +17,7 @@ limitations under the License.
 package cat.tv3.eng.rec.recomana.lupa.engine;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-
-
-
-
 
 import cat.calidos.storm.freeling.FlAnalyzedSentence.FlAnalyzedSentence;
 import backtype.storm.task.OutputCollector;
@@ -43,8 +38,7 @@ public class FreelingBoltSimulator extends BaseRichBolt{
 	@Override
 	public void prepare(Map stormConf, TopologyContext context,
 			OutputCollector collector) {
-		_collector = collector; 	    
-		
+		_collector = collector; 		
 	}
 
 	@Override
@@ -66,18 +60,12 @@ public class FreelingBoltSimulator extends BaseRichBolt{
 		}
 		freeling_noticia.setOriginalTokens(originalTokens);		
 		freeling_noticia.setMorfologicTokens(morfologicTokens);	
-
 		
-		_collector.emit(new Values(freeling_noticia));
-       
-		
-		
+		_collector.emit(new Values(freeling_noticia));	
 	}
 	
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		  declarer.declare(new Fields("FlAnalyzedSentence")); 
-		
-	}
-	
+		  declarer.declare(new Fields("FlAnalyzedSentence")); 		
+	}	
 }
