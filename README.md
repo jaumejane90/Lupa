@@ -19,11 +19,11 @@ It can be distinguished two generic types of recommendation systems in terms of 
 
 * **Content-based filtering** - uses characteristics of an item to recommend other objects with similar features and is based on user preferences for specific values of product characteristics. Also it can employ importance ratings and feature's trade-offs to construct recommendations. For instance, in movie recommendation it may take into account factors such as genre, actors or director. In the case of music, personalized online radio stations are created on base of fundamental music features like types of instruments or rhythm.
 
-`REWRITE MK`
+`CLARIFY MK`
  The main disadvantage of this type of recommendation is that it is not able to construct recommendations for users that does not give any preference information. In comparison with collaborative filtering it admits recommendations of totally new products, but it does not take into account the preference similarity through users.
 
 In the absence of any user preferences or a completely anonymous system, a common solution is to assume the user prefers the item that she is viewing or selecting
-`REWRITE MK`
+`CLARIFY MK`
 
 
 Regardless of the chosen type, an effective recommendation system should be able to use at least one of the following five information sources:
