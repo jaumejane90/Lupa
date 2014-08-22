@@ -5,27 +5,23 @@ BigData Clustering Text recommendation
 
 What is recommendation?
 -----------------------
-A recommendation is a preditction of a rating or preferece that a user would grant to a specific object, achieved by using a recommendation system, which is a sub-category of *information filtering system*. The recommendation is based on previously recorded data and its main objective is to boost the conversion rate and the cross-selling by proposing complementary products, as well as the customer's loyalty.
+A recommendation is a preditction of a rating or preferece that a user would grant to a specific object, achieved by using a recommendation system, which is a sub-category of *information filtering system*. The recommendation is based on previously recorded data and its main objective is to boost the conversion rate, foster the cross-selling by proposing complementary products and encourage customer's loyalty. It can be implemented on a wide range of products, like videos, news, books and songs, among others and is used by many leader companies such as Amazon, Netflix and Pandora.
 
 
 Types of automatic recommendation
 ---------------------------------
-It be distinguish two generic types of recommendations systems in terms of information sources:
+It can be distinguished two generic types of recommendations systems in terms of information sources:
 
-1. **Collaborative filtering ~~(User to User)~~** - takes into account user's past behavior, like items purchased or viewed, as well as collaboration between users and similar decisions made by other users. It predicts user's preferences as a combination of other user's preferencesThrough ratings given by other users it can be predicted a rating of another user, and that way, recommend him/her a specific content.
+* **Collaborative filtering** - takes into account user's past behavior, like items purchased or viewed, as well as collaboration between users and similar decisions made by other users. It predicts user's preferences as a weighted sum of other users' preferences, where the weights are corresponding to fraction of correlations of joint set of items assessed by two users.
 
-can be used only if at least fer people have evaluated the product
-
-
-2. **Content-based filtering** - uses characteristics of an item to recommend other objects with similar features.
-  * **Item to Item** For example, for movies it may take into account factors such as genre, actors or director.
-  * **Topic to Topic** In the case of music, personalized online radio stations considers types of intruments or rythm to define the music category, and then, recommend songs or artist from the same group.
+ The two main disadvantatges of this method are that, firstly, it can be used if there already exists information about   the item (at least couple of users have assessed the product), which means that it cannot recommend a new product.       Secondly, this method does not take into account item characteristics, which can lead to a recommendation of a product   from a completly disparate category
 
 
-is based on consumer preferences for product attributes
-can use importance ratings and attribute trade-offs to make recommendations
-do not incorporate the information in preference similarity across indivuals
-cannot make recommendations for people who provide no preference information
+* **Content-based filtering** - uses characteristics of an item to recommend other objects with similar features and is based on user preferences for product characteristic. Also can employ importance ratings and feature's trade-offs to construct recommendations. For instance, in movies recommendation it may take into account factors such as genre, actors or director. In the case of music, personalized online radio stations are created in base of fundamental features like types of intruments or rhythm.
+
+ The main disadvantage of this type of recommendation is that it is not able to construct recommendations for users that  does not give any preference information. In comparison with collaborative filtering it admits recomendations of totally  new products, but it does not take into account the preference similarity through users
+ 
+
 
 Regardless of the chosen type, an effective recommendation system should be able to use at least on of the following five information sources:
 
