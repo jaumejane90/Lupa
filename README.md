@@ -19,9 +19,11 @@ It can be distinguished two generic types of recommendation systems in terms of 
 
 * **Content-based filtering** - uses characteristics of an item to recommend other objects with similar features and is based on user preferences for specific values of product characteristics. Also it can employ importance ratings and feature's trade-offs to construct recommendations. For instance, in movie recommendation it may take into account factors such as genre, actors or director. In the case of music, personalized online radio stations are created on base of fundamental music features like types of instruments or rhythm.
 
+ As opposed to collaborative filtering though, content-based methods allow recommendations of completly new products, as long as these items have relevant product characteristics.
+
  In the absence of any user preferences or a completely anonymous system where no user information can be recorded, a common solution used for content-based filtering is to assume the user prefers the item that he/she is viewing or selecting at the moment, creating that way a data source for the future recommendation.
 
- Finally, comparing with collaborative filtering, the content-based method admits recommendations of totally new products, but it does not take into account the preference similarity through users.
+
 
 Regardless of the chosen type, an effective recommendation system should be able to use at least one of the following five information sources:
 
