@@ -34,3 +34,17 @@ Regardless of the chosen type, an effective recommendation system should be able
 5. Expert evaluations
 
 In the case of _Lupa_, the chosen recommendation method is *Content-based filtering*, using item-to-item `EXPAND JJ`
+
+Recommendation Test
+-------------------
+
+This test consisted of a recommendation of 20786 news without and with clustering, using two different environments: local and global (Amazon). The objective of this test was to compare the runtime of both environments and find the most optimal.
+
+Results:
+ 
+ | Mode Local without clustering | Mode Local with clustering | Mode AWS 4large 
+ ---|---|---|---
+ Cost Time | 3 days 2h 30 min | 1h 10 min | 25 min
+ Insert New Item | 2 min | 9 seconds | 2 seconds
+ 
+ Occupied space: 62367 keys -> 72M
