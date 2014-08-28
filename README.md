@@ -14,7 +14,7 @@ It can be distinguished two generic types of recommendation systems in terms of 
 
 * **Collaborative filtering** - takes into account user's past behavior, like items purchased or viewed, as well as collaboration between users and similar decisions made by other users. It predicts user's preferences as a weighted sum of the other users' preferences, where the weights are corresponding to the fraction of correlations of joint set of items assessed by two users.
 
- The two main disadvantages of this method are that, firstly, it can be used only if there already exists information about the item (at least a couple of users have assessed the product), which means that it cannot recommend a new product. Secondly, this method does not take into account item's characteristics, which can lead to a recommendation of a product from a completely different category
+ The two main disadvantages of this method are that, firstly, it can be used only if there already exists information about the item (at least a couple of users have assessed the product), which means that it cannot recommend a new product. Secondly, this method does not take into account item's characteristics, which can lead to a recommendation of a product from a completely different category.
 
 
 * **Content-based filtering** - uses characteristics of an item to recommend other objects with similar features and is based on user preferences for specific values of product characteristics. Also it can employ importance ratings and feature's trade-offs to construct recommendations. For instance, in movie recommendation it may take into account factors such as genre, actors or director. In the case of music, personalized online radio stations are created on base of fundamental music features like types of instruments or rhythm.
@@ -35,14 +35,14 @@ Regardless of the chosen type, an effective recommendation system should be able
 
 In the case of _Lupa_, the chosen recommendation method is *Content-based filtering*, using item-to-item `EXPAND JJ`
 
-Recommendation Test
+Performance Test
 -------------------
 
 This test consisted of a recommendation of 20786 news without and with clustering, using two different environments: local and global (Amazon). The objective of this test was to compare the runtime of both environments and find the most optimal.
 
 Results:
  
- | Mode Local without clustering | Mode Local with clustering | Mode AWS 4large 
+ | Mode Local without clustering | Mode Local with clustering | Mode AWS 4large with clustering
  ---|---|---|---
  Cost Time | 3 days 2h 30 min | 1h 10 min | 25 min
  Insert New Item | 2 min | 9 seconds | 2 seconds
