@@ -56,7 +56,7 @@ public static JedisPool pool;
 		  *  mvn failsafe:integration-test -Dit.test=LupaFullBooksITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
 		  */
 		 /*
-		  *  Defaults  redis_host=localhost redis_port=6379 freeling_host freeling_port=5050 language=en
+		  *  Defaults  redisHost=localhost redisPort=6379 freelingHost freelingPort=5050 language=en
 		  * 
 		  */	
 		

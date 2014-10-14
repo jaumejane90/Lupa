@@ -18,8 +18,14 @@
 		<storm.version>0.9.1-incubating</storm.version>	
 		<junit.version>4.7</junit.version>
 		<redis.version>2.0.0</redis.version>
-
 		
+		<!-- test properties -->
+		<redis_host>localhost</redis_host>
+        <redis_port>6379</redis_port> 
+        <freeling_host>localhost</freeling_host>		
+        <freeling_port>5050</freeling_port>
+        <language>en</language>
+        <verbose_tests>true</verbose_tests>	<!-- use true to display more information -->
 	</properties>
 
 	<repositories>
@@ -48,11 +54,12 @@
 				   <version>2.17</version>
 				   <configuration>
 						<systemPropertyVariables>
-						   <redis_host>localhost</redis_host>						   
-						   <redis_port>6379</redis_port>
-						   <freeling_host>localhost</freeling_host>
-						   <freeling_port>5050</freeling_port>
-						   <language>en</language>
+						   <redis_host>${redis_host}</redis_host>						   
+						   <redis_port>${redis_port}</redis_port>
+						   <freeling_host>${freeling_host}</freeling_host>
+						   <freeling_port>${freeling_port}</freeling_port>
+						   <language>${language}</language>
+						   <verbose_tests>${verbose_tests}</verbose_tests>
 						</systemPropertyVariables>
 				   </configuration>
 				   <executions>

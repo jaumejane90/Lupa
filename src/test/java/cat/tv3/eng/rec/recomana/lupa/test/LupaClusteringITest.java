@@ -1,5 +1,5 @@
 /**
-Copyright 2014 Jaume Jané 
+Copyright 2014 Jaume Jané - Daniel Giribet
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,30 +17,27 @@ limitations under the License.
 package cat.tv3.eng.rec.recomana.lupa.test;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
 import cat.calidos.storm.freeling.socket.FreelingBolt;
-
 import cat.tv3.eng.rec.recomana.lupa.clustering.DispatcherClusterBolt;
 import cat.tv3.eng.rec.recomana.lupa.clustering.SearchClusterNodeBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CalcProbBolt;
 import cat.tv3.eng.rec.recomana.lupa.engine.CompareTextBolt;
 import cat.tv3.eng.rec.recomana.lupa.io.TextRedisSpout;
 
-public class LupaClusteringITest {
-	
-	public static JedisPool pool;
-	
+public class LupaClusteringITest extends LupaBaseIT3st {
+		
 	@Test
 	public void testInTopology() throws InterruptedException {		
 		 /*TEST FROM ECLIPSE -> RUN CONFIGURATION(Arguments -> VM Arguments) :
@@ -53,32 +50,21 @@ public class LupaClusteringITest {
 		 */
 		
 		 /* TEST FROM MVN TERMINAL
-		  * mvn failsafe:integration-test -Dit.test=LupaClustringITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
+		  * mvn failsafe:integration-test -Dit.test=LupaClusteringITest.java -Dredis_host=172.21.110.182 -Dredis_port=6379 -Dfreeling_host=172.21.110.182 -Dfreeling_port=5050 -Dlanguage=en
 		  */
 		
 		 /*
-		  *  Defaults  redis_freeling_host=localhost redis_port=6379 freeling_port=5050 language=en
+		  *  Defaults  redis_freeling_host=localhost redisPort=6379 freelingPort=5050 language=en
 		  * 
 		  */	
-		
-		 String redis_host = System.getProperty("redis_host");		
-         int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
-         String freeling_host = System.getProperty("freeling_host");		
-         int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
-         String language = System.getProperty("language");	
-	     
-	     JedisPoolConfig poolConfig = new JedisPoolConfig();
-	     poolConfig.setMaxActive(1);
-	     poolConfig.setMaxIdle(1);
-	     pool = new JedisPool(new JedisPoolConfig(),redis_host,redis_port);        
-		 
+			 
 	     TopologyBuilder b = new TopologyBuilder();
-	     b.setSpout("TextRedisSpout", new TextRedisSpout(redis_host, redis_port)); 
-	     b.setBolt("FreelingBolt", new FreelingBolt(freeling_host,freeling_port)).shuffleGrouping("TextRedisSpout"); 
-	     b.setBolt("CalcProBolt",new CalcProbBolt(redis_host,redis_port,language)).shuffleGrouping("FreelingBolt");
-	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redis_host,redis_port,4)).shuffleGrouping("CalcProBolt");
-		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redis_host,redis_port)).shuffleGrouping("SearchClusterNodeBolt"); 
-	     b.setBolt("CompareTextBolt", new CompareTextBolt(redis_host,redis_port)).shuffleGrouping("DispatcherClusterBolt");
+	     b.setSpout("TextRedisSpout", new TextRedisSpout(redisHost, redisPort)); 
+	     b.setBolt("FreelingBolt", new FreelingBolt(freelingHost,freelingPort)).shuffleGrouping("TextRedisSpout"); 
+	     b.setBolt("CalcProBolt",new CalcProbBolt(redisHost,redisPort,language)).shuffleGrouping("FreelingBolt");
+	     b.setBolt("SearchClusterNodeBolt", new SearchClusterNodeBolt(redisHost,redisPort,4)).shuffleGrouping("CalcProBolt");
+		 b.setBolt("DispatcherClusterBolt", new DispatcherClusterBolt(redisHost,redisPort)).shuffleGrouping("SearchClusterNodeBolt"); 
+	     b.setBolt("CompareTextBolt", new CompareTextBolt(redisHost,redisPort)).shuffleGrouping("DispatcherClusterBolt");
 	         
 		LocalCluster cluster = new LocalCluster();
 		
