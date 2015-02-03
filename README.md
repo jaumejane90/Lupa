@@ -35,6 +35,11 @@ Regardless of the chosen type, an effective recommendation system should be able
 
 In the case of _Lupa_, the chosen recommendation method is *Content-based filtering*, using item-to-item 
 
+
+<iframe src="//www.slideshare.net/slideshow/embed_code/44224872" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/JaumeJane90/presentacio-pdf-44224872" title="Slideshare presentation of Lupa" target="_blank">Slideshare presentation of Lupa</a> </strong>  </div>
+
+
+
 Performance Test
 -------------------
 
@@ -48,3 +53,5 @@ Results:
  Insert New Item | 2 min | 9 seconds | 2 seconds
  
  Occupied space: 62367 keys -> 72M
+ 
+ 
