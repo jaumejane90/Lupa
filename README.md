@@ -33,7 +33,7 @@ Regardless of the chosen type, an effective recommendation system should be able
 4. Individual characteristics that may predict preferences
 5. Expert evaluations
 
-In the case of _Lupa_, the chosen recommendation method is *Content-based filtering*, using item-to-item `EXPAND JJ`
+In the case of _Lupa_, the chosen recommendation method is *Content-based filtering*, using item-to-item 
 
 Performance Test
 -------------------
