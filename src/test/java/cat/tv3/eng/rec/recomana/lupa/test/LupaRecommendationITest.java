@@ -59,15 +59,15 @@ public class LupaRecommendationITest {
 		  */
 		
 		 /*
-		  *  Defaults  redis_host=localhost redis_port=6379 freeling_host freeling_port=5050 language=en
+		  *  Defaults  redisHost=localhost redisPort=6379 freelingHost freelingPort=5050 language=en
 		  * 
 		  */	
 		
 		
 		 String redis_host = System.getProperty("redis_host");		
-		 int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
-		 String freeling_host = System.getProperty("freeling_host");		
-		 int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
+         int redis_port = Integer.parseInt(System.getProperty("redis_port"));   
+         String freeling_host = System.getProperty("freeling_host");		
+         int freeling_port = Integer.parseInt(System.getProperty("freeling_port"));
 		 String language = System.getProperty("language");	
 		 
 		 JedisPoolConfig poolConfig = new JedisPoolConfig();
